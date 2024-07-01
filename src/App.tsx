@@ -1,12 +1,25 @@
-import IconHero from '@icons/iconHero.svg';
+import { Routes, Route, BrowserRouter } from 'react-router-dom';
+import AppRoutes from './routes';
 
 function App() {
     return (
-        <div className="flex gap-10 font-bold italic">
-            1234
-            <IconHero />
-        </div>
+        <BrowserRouter>
+            <Routes>
+                {
+                    AppRoutes.map((item, index) => {
+                        const Page = item.Component;
+                        return (
+                            <Route
+                                key={`route-${index}`}
+                                path={item.path}
+                                element={<Page />}
+                            />
+                        )
+                    })
+                }
+            </Routes>
+        </BrowserRouter>
     );
-}
+};
 
 export default App;
