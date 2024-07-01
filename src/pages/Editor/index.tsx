@@ -1,7 +1,7 @@
 const Editor = () => {
     return (
         <div className="">
-            Editor page
+            Editor page 123
         </div>
     );
 };
