@@ -28,6 +28,7 @@ module.exports = (env, argv) => {
                 '@core': path.resolve(__dirname, './src/core'),
                 '@hooks': path.resolve(__dirname, './src/hooks'),
                 '@utils': path.resolve(__dirname, './src/utils'),
+                '@constants': path.resolve(__dirname, './src/constants'),
             }
         },
         entry: ['./src/index.tsx'],

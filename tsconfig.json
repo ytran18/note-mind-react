@@ -29,6 +29,7 @@
       "@core/*": ["src/core/*"],
       "@hooks/*": ["src/hooks/*"],
       "@utils/*": ["src/utils/*"],
+      "@constants/*": ["src/constants/*"],
     }
   },
   "include": [
