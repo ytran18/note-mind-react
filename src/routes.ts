@@ -7,7 +7,7 @@ const AppRoutes = [
         defaultLayout: true,
     },
     {
-        path: '/dashboard',
+        path: '/',
         Component: Page?.DashboardPage,
         defaultLayout: true,
     },
@@ -17,7 +17,7 @@ const AppRoutes = [
         defaultLayout: false,
     },
     {
-        path: '/',
+        path: '/mainpage',
         Component: Page?.MainPage,
         defaultLayout: true,
     },
