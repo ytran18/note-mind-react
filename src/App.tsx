@@ -1,5 +1,8 @@
+import { Fragment } from 'react';
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import AppRoutes from './routes';
+
+import DefaultLayout from '@components/Layout/DefaultLayout';
 
 function App() {
     return (
@@ -7,12 +10,17 @@ function App() {
             <Routes>
                 {
                     AppRoutes.map((item, index) => {
+                        const Layout = item.defaultLayout ? DefaultLayout : Fragment;
                         const Page = item.Component;
                         return (
                             <Route
                                 key={`route-${index}`}
                                 path={item.path}
-                                element={<Page />}
+                                element={
+                                    <Layout>
+                                        <Page />
+                                    </Layout>
+                                }
                             />
                         )
                     })
