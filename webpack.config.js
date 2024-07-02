@@ -109,7 +109,9 @@ module.exports = (env, argv) => {
                 filename: isProduction ? 'static/css/[name].[contenthash:6].css' : '[name].css'
             }),
 
-            new Dotenv(),
+            new Dotenv({
+                systemvars: true
+            }),
 
             new CopyWebpackPlugin({
                 patterns: [
