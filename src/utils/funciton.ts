@@ -2,6 +2,14 @@ import { message } from "antd";
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { storage } from "@core/firebase/firebase";
 
+// tailwind merge
+import { clsx, type ClassValue } from 'clsx';
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]) {
+    return twMerge(clsx(inputs));
+};
+
 export const handleUploadPDF = async (file: any): Promise<string | void> => {
     console.log("running");
     
