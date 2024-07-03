@@ -1,5 +1,5 @@
 import { useState } from 'react';
-
+import { useNavigate } from 'react-router-dom';
 import { Button, message } from 'antd';
 import FileCard from '@components/UI/FileCard';
 import ModalUploadFile from '@components/UI/ModalUploadFile';
@@ -24,6 +24,8 @@ const MainPage = () => {
         confirmLoading: false,
     });
 
+    const navigate = useNavigate();
+
     const handleModalOk = async () => {
         try {
             setState(prev => ({...prev, confirmLoading: true}));
@@ -43,11 +45,20 @@ const MainPage = () => {
         setState(prev => ({...prev, file: [file]}));
     };
 
+    const handleNavigateBack = () => {
+        navigate('/');
+    };
+
+    const handleNavigateEditor = (cardId: string) => {
+        navigate(`/editor/${cardId}`);
+    };
+
     return (
         <div className="h-full max-w-3xl w-[48rem] 2xl:max-w-5xl 2xl:w-[64rem] mx-auto">
             <div className="w-full h-full pt-4 flex flex-col gap-4 px-16 sm:px-0">
                 <div
                     className='flex items-center w-fit p-2 gap-3 text-sm font-medium cursor-pointer hover:bg-[#f1f5f9] transition-colors duration-200 rounded-md select-none'
+                    onClick={handleNavigateBack}
                 >
                     <IconLeft />
                     Back                
@@ -68,7 +79,10 @@ const MainPage = () => {
                 <div className='grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-3 gap-4 place-items-center'>
                     {cards.map((item) => {
                         return (
-                            <div key={item.id}>
+                            <div
+                                key={item.id}
+                                onClick={() => handleNavigateEditor(item.id)}
+                            >
                                 <FileCard
                                     docId={item.id}
                                     title={item.title}

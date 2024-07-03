@@ -1,6 +1,14 @@
 import { Button } from "antd";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
+
+    const navigate = useNavigate();
+
+    const handleNavigate = () => {
+        navigate('/mainpage');
+    };
+
     return (
         <div className="w-full h-full flex justify-center">
             <div className="absolute top-0 -z-10 h-full w-full bg-white">
@@ -19,7 +27,10 @@ const Dashboard = () => {
                 <p className="2xl:text-md text-center text-base text-gray-500 md:text-lg">
                     Fueling your learning journey, every step of the way
                 </p>
-                <Button className="!font-medium">
+                <Button
+                    className="!font-medium"
+                    onClick={handleNavigate}
+                >
                     Get Started
                     <span className="ml-3 transition-all group-hover:animate-pulse">
                         🚀
