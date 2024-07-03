@@ -28,7 +28,7 @@ const Editor = () => {
     };
 
     return (
-        <div className='w-screen h-screen p-4 flex flex-col gap-3'>
+        <div className='w-screen !h-screen p-4 flex flex-col gap-3'>
             <div className='w-fit flex items-center gap-3'>
                 <div
                     className='p-1 hover:bg-[#f1f5f9] transition-colors duration-200 rounded-lg cursor-pointer'
