@@ -29,6 +29,7 @@ module.exports = (env, argv) => {
                 '@hooks': path.resolve(__dirname, './src/hooks'),
                 '@utils': path.resolve(__dirname, './src/utils'),
                 '@constants': path.resolve(__dirname, './src/constants'),
+                '@lib': path.resolve(__dirname, './src/lib'),
             }
         },
         entry: ['./src/index.tsx'],
