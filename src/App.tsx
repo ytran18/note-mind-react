@@ -3,6 +3,7 @@ import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import AppRoutes from './routes';
 
 import DefaultLayout from '@components/Layout/DefaultLayout';
+import ProtectedRoute from '@lib/ProtectedRoute';
 
 function App() {
     return (
@@ -18,7 +19,13 @@ function App() {
                                 path={item.path}
                                 element={
                                     <Layout>
-                                        <Page />
+                                        {item.isProtected ? (
+                                            <ProtectedRoute>
+                                                <Page />
+                                            </ProtectedRoute>
+                                        ) : (
+                                            <Page />
+                                        )}
                                     </Layout>
                                 }
                             />
