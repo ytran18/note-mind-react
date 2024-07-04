@@ -4,6 +4,10 @@ import { Button, message } from 'antd';
 import FileCard from '@components/UI/FileCard';
 import ModalUploadFile from '@components/UI/ModalUploadFile';
 
+// redux
+import { useAppSelector } from '@core/redux';
+import { currUser } from '@core/redux/user';
+
 import { handleUploadPDF } from '@utils/funciton';
 import { cards } from '@constants/mock';
 
@@ -23,6 +27,8 @@ const MainPage = () => {
         file: [],
         confirmLoading: false,
     });
+
+    const user = useAppSelector(currUser);
 
     const navigate = useNavigate();
 
