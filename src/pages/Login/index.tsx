@@ -52,7 +52,7 @@ const Login = () => {
     
                             if (!isExist) {
                                 const newUser: User = {
-                                    _id: v4(),
+                                    _id: result.user.uid,
                                     email: result.user.email!,
                                     name: result.user.displayName!,
                                     image: result.user.photoURL!,
@@ -60,12 +60,10 @@ const Login = () => {
                                 };
         
                                 const docRef = doc(collection(fireStore, 'users'), newUser._id);
-                                dispatch(userLogin(newUser));
                                 setDoc(docRef, newUser);
                                 navigate('/mainpage');
                                 message.success("Register successfully !!!");
                             } else {
-                                dispatch(userLogin(currUser));
                                 navigate('/mainpage');
                                 message.success("Login successfully !!!");
                             };
