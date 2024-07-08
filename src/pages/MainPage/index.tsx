@@ -1,11 +1,11 @@
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import { Button, message } from 'antd';
+import { useEffect, useState } from 'react';
+import { Button } from 'antd';
 import FileCard from '@components/UI/FileCard';
-import ModalUploadFile from '@components/UI/ModalUploadFile';
+import ModalCreateNote from '@components/UI/ModalCreateNote';
 
-import { handleUploadPDF } from '@utils/funciton';
-import { cards } from '@constants/mock';
+import { getUserDocuments } from '@utils/funciton';
+import { Document } from '@utils/interface';
 
 import useAuth from '@hooks/useAuth';
 import LoadingPage from '@components/Layout/LoadingPage';
@@ -17,6 +17,8 @@ interface DashboardStateTypes {
     isModalUploadOpen: boolean;
     file: any[];
     confirmLoading: boolean;
+    isModalCreateNote: boolean;
+    cards: Document[];
 };
 
 const MainPage = () => {
@@ -25,30 +27,26 @@ const MainPage = () => {
         isModalUploadOpen: false,
         file: [],
         confirmLoading: false,
+        isModalCreateNote: false,
+        cards: [],
     });
 
     const user = useAuth().user;
     const userLoading = useAuth().loading;
+
+    const getCards = async (user: any) => {
+        const documents = await getUserDocuments(user!);
+        setState(prev => ({...prev, cards: documents}));
+    };
+
+    useEffect(() => {
+        !userLoading && getCards(user);
+    },[userLoading]);
     
     const navigate = useNavigate();
 
-    const handleModalOk = async () => {
-        try {
-            setState(prev => ({...prev, confirmLoading: true}));
-            const res = await handleUploadPDF(state.file?.[0]?.originFileObj);
-            message.success('Upload file successfully!')
-            setState(prev => ({...prev, confirmLoading: false, isModalUploadOpen: false}));
-        } catch (error) {
-            message.error('Internal server error!');
-        }
-    };
-
-    const handleModal = () => {
-        setState(prev => ({...prev, isModalUploadOpen: !prev.isModalUploadOpen}));
-    };
-
-    const handleUploadFile = (file: any) => {
-        setState(prev => ({...prev, file: [file]}));
+    const handleModalCreateNote = () => {
+        setState(prev => ({...prev, isModalCreateNote: !prev.isModalCreateNote}));
     };
 
     const handleNavigateBack = () => {
@@ -78,34 +76,31 @@ const MainPage = () => {
                             </div>
                             <Button
                                 className='!bg-black !text-white !font-semibold'
-                                onClick={handleModal}
+                                onClick={handleModalCreateNote}
                             >
-                                Upload file
+                                Create note
                                 <IconPlus />
                             </Button>
                         </div>
                         <div className='grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-3 gap-4 place-items-center'>
-                            {cards.map((item) => {
+                            {state.cards.map((item) => {
                                 return (
                                     <div
-                                        key={item.id}
-                                        onClick={() => handleNavigateEditor(item.id)}
+                                        key={item._id}
+                                        onClick={() => handleNavigateEditor(item._id)}
                                     >
                                         <FileCard
-                                            docId={item.id}
+                                            docId={item._id}
                                             title={item.title}
                                         />
                                     </div>
                                 )
                             })}
                         </div>
-                        <ModalUploadFile
-                            open={state.isModalUploadOpen}
-                            confirmLoading={state.confirmLoading}
-                            title='Upload file'
-                            handleOk={handleModalOk}
-                            handleCancel={handleModal}
-                            handleUploadFile={handleUploadFile}
+                        <ModalCreateNote
+                            open={state.isModalCreateNote}
+                            onClose={handleModalCreateNote}
+                            getCards={getCards}
                         />
                     </div>
                 </div>

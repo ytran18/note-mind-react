@@ -1,18 +1,24 @@
 import { message } from "antd";
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
-import { storage } from "@core/firebase/firebase";
+import { collection, getDocs, where, query } from 'firebase/firestore';
+import { storage, fireStore } from "@core/firebase/firebase";
 
 // tailwind merge
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from "tailwind-merge";
+
+interface User {
+    _id: string;
+    name: string;
+    email: string;
+    image: string;
+};
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
 };
 
 export const handleUploadPDF = async (file: any): Promise<string | void> => {
-    console.log("running");
-    
     // Check if the file is a PDF
     if (file.type !== 'application/pdf') {
         message.error('Only PDF files are allowed!');
@@ -35,4 +41,27 @@ export const handleUploadPDF = async (file: any): Promise<string | void> => {
         message.error('Upload PDF failed!');
         console.error('Error uploading PDF:', error);
     }
+};
+
+export const getUserDocuments = async (user: User) => {
+    const userDocumentsRef = query(
+        collection(fireStore, 'documents'),
+        where('owner', '==', user?._id)
+    );
+
+    let documents:any = [];
+
+    await getDocs(userDocumentsRef).then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            if (doc.data()) documents.push(doc.data());
+        });
+    });
+    
+    documents = documents.sort(compare);
+
+    return documents;
+};
+
+export const compare = (a: any, b: any) => {
+    return b?.createdAt - a?.createdAt;
 };

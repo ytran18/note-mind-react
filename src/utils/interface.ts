@@ -10,11 +10,14 @@ export interface User {
 
 export interface Document {
     _id: string;
-    pdfUrl: string;
+    pdfUrl?: string;
     title: string;
     owner: string;
-    note: string;
+    noteType: 'note' | 'mermaid' | 'pdf';
+    mermaidType?: string;
     createdAt: number;
+    note?: any[];
+    code?: string;
 }
 
 // type
