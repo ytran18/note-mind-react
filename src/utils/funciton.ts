@@ -32,7 +32,7 @@ export const handleUploadPDF = async (file: any): Promise<string | void> => {
 
     try {
         // Upload the PDF file with metadata
-        const snapshot = await uploadBytes(pdfRef, file, metadata);
+        const snapshot = await uploadBytes(pdfRef, file?.originFileObj, metadata);
         // Get the download URL
         const downloadUrl = await getDownloadURL(pdfRef);
         return downloadUrl;
