@@ -20,6 +20,10 @@ interface MermaidChartProps {
     code: string;
 };
 
+mermaid.initialize({
+    startOnLoad: true,
+});
+
 const MermaidChart = forwardRef<HTMLDivElement, MermaidChartProps>((props: MermaidChartProps, ref) => {
 
     const { code } = props;
