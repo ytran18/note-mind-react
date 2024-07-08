@@ -1,23 +1,37 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@components/UI/Resizable';
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
-import LeftPanel from "@components/UI/LeftPanel";
-import RightPanel from "@components/UI/RightPanel";
+import { doc, getDoc } from 'firebase/firestore';
+import { fireStore } from "@core/firebase/firebase";
+
+import LoadingPage from "@components/Layout/LoadingPage";
+import PdfEditor from "@components/UI/PdfEditor";
 
 import IconArrowLeft from '@icons/iconArrowLeft.svg';
 
 interface DocPageStateTypes {
-    tabActive: number;
+    document: any;
 };
 
 const Editor = () => {
 
     const [state, setState] = useState<DocPageStateTypes>({
-        tabActive: 0,
+        document: {},
     });
 
     const navigate = useNavigate();
+    const pathname = useParams();
+
+    useEffect(() => {
+        if (!pathname.editorId) return;
+
+        const docRef = doc(fireStore, 'documents', pathname.editorId);
+        getDoc(docRef).then((snapshot) => {
+            let document: any = {};
+            if (snapshot.data()) document = snapshot.data();
+            setState(prev => ({...prev, document: document}));
+        });
+    },[pathname.editorId]);
 
     const handleChangeTab = (tab: number) => {
         setState(prev => ({...prev, tabActive: tab}));
@@ -29,33 +43,28 @@ const Editor = () => {
 
     return (
         <div className='w-screen !h-screen p-4 flex flex-col gap-3'>
-            <div className='w-fit flex items-center gap-3'>
-                <div
-                    className='p-1 hover:bg-[#f1f5f9] transition-colors duration-200 rounded-lg cursor-pointer'
-                    onClick={handleNavigateBack}
-                >
-                    <IconArrowLeft />
-                </div>
-                <div className='text-sm font-medium'>this is your pdf file name</div>
-            </div>
-            <ResizablePanelGroup autoSaveId="window-layout" direction="horizontal">
-                <ResizablePanel defaultSize={50} minSize={30}>
-                    <div className='h-full min-w-[25vw] border border-stone-200 rounded-lg sm:shadow-lg'>
-                        <LeftPanel docUrl='https://firebasestorage.googleapis.com/v0/b/note-mind-app.appspot.com/o/pdf%2Frc-upload-1719977365800-3?alt=media&token=789fb3e2-7456-4447-9417-4f3e2ab9867a' />
+            {Object.keys(state.document).length > 0 ? (
+                <>
+                    <div className='w-fit flex items-center gap-3'>
+                        <div
+                            className='p-1 hover:bg-[#f1f5f9] transition-colors duration-200 rounded-lg cursor-pointer'
+                            onClick={handleNavigateBack}
+                        >
+                            <IconArrowLeft />
+                        </div>
+                        <div className='text-sm font-medium'>{state.document?.title}</div>
                     </div>
-                </ResizablePanel>
-                <div className='group flex w-2 cursor-col-resize items-center justify-center rounded-md bg-gray-50'>
-                    <ResizableHandle className='h-1 w-24 rounded-full bg-neutral-400 duration-300 group-hover:bg-primaryb group-active:duration-75 lg:h-24 lg:w-1' />
-                </div>
-                <ResizablePanel defaultSize={50} minSize={30}>
-                    <div className='h-full min-w-[25vw] flex-1'>
-                        <RightPanel
-                            tabActive={state.tabActive}
-                            handleChangeTab={handleChangeTab}
-                        />
-                    </div>
-                </ResizablePanel>
-            </ResizablePanelGroup>   
+                    {state.document?.noteType === 'pdf' && (
+                        <div>
+                            <PdfEditor
+                                doc={state.document}
+                            />
+                        </div>
+                    )}
+                </>
+            ) : (
+                <LoadingPage />
+            )}
         </div>
     );
 };
