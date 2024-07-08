@@ -3,24 +3,46 @@
 @tailwind utilities;
 
 body {
-    margin: 0;
-    font-family: "Ubuntu", sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-  
-  code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',monospace;
-  }
-  
-.ant-btn {
+  margin: 0;
   font-family: "Ubuntu", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+  
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',monospace;
+}
+  
+// antd font family
+
+.ant-btn, .ant-card, .ant-popover, .ant-tour, .ant-input, .ant-select, .ant-select-dropdown, .ant-upload-wrapper, .ant-tag {
+  font-family: "Ubuntu", sans-serif;
+};
+
+// mermaid svg
+
+.sankey_svg__max-w-full {
+  max-width: 100% !important;
 }
 
-.ant-card {
-  font-family: "Ubuntu", sans-serif;
+// upload style error
+
+.anticon-paper-clip {
+  color: rgba(0,0,0,0.45) !important;
 }
 
-.ant-popover {
-  font-family: "Ubuntu", sans-serif;
+.ant-upload-list-item-name {
+  color: #1677ff !important;
+}
+
+.ant-tour-description {
+  .ant-tooltip {
+    display: none !important;
+  }
+
+  .review-note {
+    .ant-upload-list-item-actions {
+      display: none !important;
+    }
+  }
 }
