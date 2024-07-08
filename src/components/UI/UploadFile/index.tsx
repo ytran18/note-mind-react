@@ -1,5 +1,3 @@
-import { Modal } from "antd";
-
 import type { UploadProps } from "antd";
 import { Upload } from "antd";
 
@@ -7,18 +5,13 @@ import IconInbox from '@icons/iconInbox.svg';
 
 const { Dragger } = Upload;
 
-interface ModalUploadFileProps {
-    open: boolean;
-    title: string;
-    confirmLoading: boolean;
-    handleOk: (file: any) => void;
-    handleCancel: () => void;
+interface UploadFileProps {
     handleUploadFile: (file: any) => void;
 }
 
-const ModalUploadFile = (props: ModalUploadFileProps) => {
+const UploadFile = (props: UploadFileProps) => {
 
-    const { title, open, handleCancel, handleOk, handleUploadFile, confirmLoading } = props;
+    const { handleUploadFile } = props;
 
     const UploadProps: UploadProps = {
         name: 'file',
@@ -33,14 +26,7 @@ const ModalUploadFile = (props: ModalUploadFileProps) => {
     };
 
     return (
-        <Modal
-            open={open}
-            title={title}
-            confirmLoading={confirmLoading}
-            onCancel={handleCancel}
-            onOk={handleOk}
-            okText="Upload"
-        >
+        <>
             <div className="text-xs mb-3">Choose files under 6 pages to use AI, flashcard. (For now)</div>
             <Dragger {...UploadProps}>
                 <p className="w-full flex justify-center text-blue-500">
@@ -52,8 +38,8 @@ const ModalUploadFile = (props: ModalUploadFileProps) => {
                     banned files.
                 </p>
             </Dragger>
-        </Modal>
+        </>
     );
 };
 
-export default ModalUploadFile;
+export default UploadFile;
