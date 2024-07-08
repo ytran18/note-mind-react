@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from 'antd';
 import FileCard from '@components/UI/FileCard';
 import ModalCreateNote from '@components/UI/ModalCreateNote';
@@ -53,7 +53,7 @@ const MainPage = () => {
         navigate('/');
     };
 
-    const handleNavigateEditor = (cardId: string) => {
+    const handleNavigateEditor = (e: React.MouseEvent<HTMLDivElement>, cardId: string) => {
         navigate(`/editor/${cardId}`);
     };
 
@@ -85,13 +85,12 @@ const MainPage = () => {
                         <div className='grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-3 gap-4 place-items-center'>
                             {state.cards.map((item) => {
                                 return (
-                                    <div
-                                        key={item._id}
-                                        onClick={() => handleNavigateEditor(item._id)}
-                                    >
+                                    <div key={item._id}>
                                         <FileCard
                                             docId={item._id}
                                             title={item.title}
+                                            getCards={getCards}
+                                            handleNavigateEditor={handleNavigateEditor}
                                         />
                                     </div>
                                 )
