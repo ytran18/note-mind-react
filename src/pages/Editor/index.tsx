@@ -41,7 +41,7 @@ const Editor = () => {
             <ResizablePanelGroup autoSaveId="window-layout" direction="horizontal">
                 <ResizablePanel defaultSize={50} minSize={30}>
                     <div className='h-full min-w-[25vw] border border-stone-200 rounded-lg sm:shadow-lg'>
-                        <LeftPanel docUrl='https://firebasestorage.googleapis.com/v0/b/note-mind-3f8ce.appspot.com/o/pdf%2Frc-upload-1719477772228-3?alt=media&token=4baa7683-f432-4325-a23e-380e48ad8d5f' />
+                        <LeftPanel docUrl='https://firebasestorage.googleapis.com/v0/b/note-mind-app.appspot.com/o/pdf%2Frc-upload-1719977365800-3?alt=media&token=789fb3e2-7456-4447-9417-4f3e2ab9867a' />
                     </div>
                 </ResizablePanel>
                 <div className='group flex w-2 cursor-col-resize items-center justify-center rounded-md bg-gray-50'>
