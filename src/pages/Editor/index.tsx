@@ -6,6 +6,7 @@ import { fireStore } from "@core/firebase/firebase";
 
 import LoadingPage from "@components/Layout/LoadingPage";
 import PdfEditor from "@components/UI/PdfEditor";
+import MermaidEditor from "@components/UI/MermaidEditor";
 
 import IconArrowLeft from '@icons/iconArrowLeft.svg';
 
@@ -55,10 +56,15 @@ const Editor = () => {
                         <div className='text-sm font-medium'>{state.document?.title}</div>
                     </div>
                     {state.document?.noteType === 'pdf' && (
-                        <div>
+                        <div className="w-full flex flex-grow">
                             <PdfEditor
                                 doc={state.document}
                             />
+                        </div>
+                    )}
+                    {state.document?.noteType === 'mermaid' && (
+                        <div className="w-full flex flex-grow">
+                            <MermaidEditor />
                         </div>
                     )}
                 </>
