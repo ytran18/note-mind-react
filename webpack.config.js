@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
@@ -32,60 +31,68 @@ module.exports = (env, argv) => {
                 '@lib': path.resolve(__dirname, './src/lib'),
             }
         },
+        optimization: {
+            splitChunks: {
+                chunks: 'all',
+            },
+        },
         entry: ['./src/index.tsx'],
         module: {
-        rules: [
-            {
-                test: /\.tsx?$/,
-                exclude: /node_modules/,
-                use: ['babel-loader']
-            },
-            {
-                test: /\.(s[ac]ss|css)$/, // sass || scss || css
-                use: [
-                    MiniCssExtractPlugin.loader,
-                    {
-                        loader: 'css-loader',
-                        options: { sourceMap: !isProduction }
-                    },
-                    {
-                        loader: 'sass-loader',
-                        options: { sourceMap: !isProduction }
-                    },
-                    {
-                        loader: 'postcss-loader',
-                        options: { sourceMap: !isProduction }
-                    }
-                ]
-            },
-            {
-                test: /\.(png|jpg|gif)$/,
-                use: [
-                    {
-                    loader: 'file-loader',
-                        options: {
-                            name: isProduction ? 'static/media/[name].[contenthash:6].[ext]' : '[path][name].[ext]'
+            rules: [
+                {
+                    test: /\.tsx?$/,
+                    exclude: /node_modules/,
+                    use: [
+                        'thread-loader',
+                        'babel-loader'
+                    ]
+                },
+                {
+                    test: /\.(s[ac]ss|css)$/, // sass || scss || css
+                    use: [
+                        MiniCssExtractPlugin.loader,
+                        {
+                            loader: 'css-loader',
+                            options: { sourceMap: !isProduction }
+                        },
+                        {
+                            loader: 'sass-loader',
+                            options: { sourceMap: !isProduction }
+                        },
+                        {
+                            loader: 'postcss-loader',
+                            options: { sourceMap: !isProduction }
                         }
-                    }
-                ]
-            },
-            {
-                test: /\.(eot|ttf|woff|woff2)$/,
-                use: [
-                    {
-                    loader: 'file-loader',
-                        options: {
-                            name: isProduction ? 'static/fonts/[name].[ext]' : '[path][name].[ext]'
+                    ]
+                },
+                {
+                    test: /\.(png|jpg|gif)$/,
+                    use: [
+                        {
+                            loader: 'file-loader',
+                            options: {
+                                name: isProduction ? 'static/media/[name].[contenthash:6].[ext]' : '[path][name].[ext]'
+                            }
                         }
-                    }
-                ]
-            },
-            {
-                test: /\.svg$/i,
-                issuer: /\.[jt]sx?$/,
-                use: ['@svgr/webpack'],
-            },
-        ]
+                    ]
+                },
+                {
+                    test: /\.(eot|ttf|woff|woff2)$/,
+                    use: [
+                        {
+                            loader: 'file-loader',
+                            options: {
+                                name: isProduction ? 'static/fonts/[name].[ext]' : '[path][name].[ext]'
+                            }
+                        }
+                    ]
+                },
+                {
+                    test: /\.svg$/i,
+                    issuer: /\.[jt]sx?$/,
+                    use: ['@svgr/webpack'],
+                },
+            ]
         },
 
         output: {
