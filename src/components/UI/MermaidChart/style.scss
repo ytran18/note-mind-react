@@ -28,3 +28,7 @@
     font-weight: 500;
     color: #e53e3e;
 }
+
+[aria-roledescription = "error"] {
+    display: none !important;
+}

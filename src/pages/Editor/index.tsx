@@ -56,14 +56,20 @@ const Editor = () => {
                         <div className='text-sm font-medium'>{state.document?.title}</div>
                     </div>
                     {state.document?.noteType === 'pdf' && (
-                        <div className="w-full flex flex-grow">
+                        <div
+                            style={{height: 'calc(100% - 26px)'}}
+                            className="w-full"
+                        >
                             <PdfEditor
                                 doc={state.document}
                             />
                         </div>
                     )}
                     {state.document?.noteType === 'mermaid' && (
-                        <div className="w-full flex flex-grow">
+                        <div
+                            style={{height: 'calc(100% - 26px)'}}
+                            className="w-full"
+                        >
                             <MermaidEditor />
                         </div>
                     )}

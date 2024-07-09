@@ -75,7 +75,7 @@ const MermaidChart = forwardRef<HTMLDivElement, MermaidChartProps>((props: Merma
             mermaidChart?.removeAttribute("data-processed");
         };
         onHandleMermaidData(code);
-    }, [code, state.isErr]);
+    }, [code, state.isErr, ref]);
 
     useEffect(() => {
         const lines = state.errMessage.split('\n');

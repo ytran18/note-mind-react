@@ -14,7 +14,9 @@ const MonacoEditor = (props: MonacoEditorProps) => {
 
     useEffect(() => {
         const editorContainer = document.getElementById('monaco-mermaid');
+        console.log({editorContainer});
         if (editorContainer) {
+            console.log("running");
             editorRef.current = monaco.editor.create(editorContainer, {
                 language: 'mermaid',
                 minimap: {
@@ -25,7 +27,7 @@ const MonacoEditor = (props: MonacoEditorProps) => {
                 overviewRulerLanes: 0,
                 quickSuggestions: true,
                 scrollBeyondLastLine: false,
-                value: '', // Hoặc giá trị code mặc định nếu có
+                value: '',
             });
 
             editorRef.current.onDidChangeModelContent(({ isFlush }) => {
