@@ -33,7 +33,6 @@ const MonacoEditor = (props: MonacoEditorProps) => {
                 if (isFlush) return;
                 const newValue = editorRef.current?.getValue();
                 if (newValue) {
-                    console.log({newValue});
                     handleChangeCode(newValue);
                 }
             });
