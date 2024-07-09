@@ -1,0 +1,15 @@
+.file-card {
+    .ant-card-cover {
+        border-left: 1px solid #f0f0f0 !important;
+        border-right: 1px solid #f0f0f0 !important;
+        border-top: 1px solid #f0f0f0 !important;
+        border-top-left-radius: 8px !important;
+        border-top-right-radius: 8px !important;
+    }
+
+}
+.card-context-menu-popover {
+    .ant-popover-inner {
+        padding: 4px !important;
+    }
+}

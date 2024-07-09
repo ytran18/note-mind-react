@@ -53,7 +53,12 @@ const MainPage = () => {
         navigate('/');
     };
 
-    const handleNavigateEditor = (e: React.MouseEvent<HTMLDivElement>, cardId: string) => {
+    const handleNavigateEditor = ( /* e: React.MouseEvent<HTMLSpanElement>, */ cardId: string) => {
+        // const cardElement = document?.getElementById(cardId);
+        // const actionsElement = cardElement?.getElementsByClassName('ant-card-actions')?.[0];
+        // console.log(e.target);
+
+        // if (actionsElement && actionsElement?.contains(e.target as Node)) return;
         navigate(`/editor/${cardId}`);
     };
 
@@ -82,7 +87,7 @@ const MainPage = () => {
                                 <IconPlus />
                             </Button>
                         </div>
-                        <div className='grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-3 gap-4 place-items-center'>
+                        <div className='grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-3 gap-4 place-items-center pb-5'>
                             {state.cards.map((item) => {
                                 return (
                                     <div key={item._id}>

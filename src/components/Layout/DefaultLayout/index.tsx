@@ -14,7 +14,7 @@ const DefaultLayout = (props: DefaultLayoutProps) => {
             <div className="">
                 <Header />
             </div>
-            <div className="flex flex-grow">
+            <div className="flex flex-grow overflow-y-auto">
                 {children}
             </div>
         </div>

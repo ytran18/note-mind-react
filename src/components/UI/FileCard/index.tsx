@@ -1,8 +1,9 @@
-import React, { useState } from "react";
-import { Card, Dropdown, Modal, Input, message } from "antd";
+import { useEffect, useState } from "react";
+import { Card, Dropdown, Modal, Input, message, Popover } from "antd";
+import { EditOutlined, EllipsisOutlined, ShareAltOutlined } from '@ant-design/icons';
 
 import { fireStore } from "@core/firebase/firebase";
-import { doc, updateDoc, deleteDoc, setDoc, collection } from 'firebase/firestore';
+import { doc, updateDoc, deleteDoc } from 'firebase/firestore';
 
 import useAuth from "@hooks/useAuth";
 
@@ -10,17 +11,22 @@ import IconTitle from '@icons/iconTitle.svg';
 import IconTrash from '@icons/iconTrash.svg';
 import IconCopy from '@icons/iconCopy.svg';
 
+import ImageEmptyDiagram from '@images/imageEmptyDiagram.png';
+
+import './style.scss';
+
 interface FileCardProps {
     docId: string;
     title: string;
     getCards: (user: any) => void;
-    handleNavigateEditor: (e: React.MouseEvent<HTMLDivElement>, cardId: string) => void;
+    handleNavigateEditor: (/*e: React.MouseEvent<HTMLDivElement>, */ cardId: string) => void;
 };
 
 interface FileCardState {
     isOpenModalRename: boolean;
     isOpenModalRemove: boolean;
     newName: string;
+    contextPopover: boolean;
 };
 
 const FileCard = (props: FileCardProps) => {
@@ -32,10 +38,27 @@ const FileCard = (props: FileCardProps) => {
         isOpenModalRemove: false,
         isOpenModalRename: false,
         newName: '',
-    })
+        contextPopover: false,
+    });
+
+    useEffect(() => {
+        const handleClickOutsideContextPopover = (e: MouseEvent) => {
+            const contextmenu = document.getElementById('card-context-menu-popover');
+            const contexticon = document.getElementById(`context-menu-icon-${docId}`);
+
+            if (contextmenu && contexticon && !contextmenu.contains(e.target as Node) && !contexticon.contains(e.target as Node)) {
+                setState(prev => ({...prev, contextPopover: false}));
+            };
+        };
+
+        document.addEventListener('click', handleClickOutsideContextPopover);
+
+        return () => document.removeEventListener('click', handleClickOutsideContextPopover);
+    },[]);
 
     const handleRename = async (status?: boolean, isSave?: boolean) => {
         state.isOpenModalRename = status !== undefined ? status : true;
+        state.contextPopover = false;
 
         if (isSave && state.newName) {
             const docRef = doc(fireStore, 'documents', docId);
@@ -49,6 +72,7 @@ const FileCard = (props: FileCardProps) => {
 
     const handleRemove = async (status?: boolean, isDelete?: boolean) => {
         state.isOpenModalRemove = status !== undefined ? status : true;
+        state.contextPopover = false;
 
         if (isDelete) {
             const docRef = doc(fireStore, 'documents', docId);
@@ -86,18 +110,63 @@ const FileCard = (props: FileCardProps) => {
     ];
 
     return (
-        <>
+        <div id={docId} className="file-card">
             <Dropdown
                 menu={{items: contextMenu}}
                 trigger={['contextMenu']}
                 rootClassName="mainpage-contextmenu"
             >
                 <Card
-                    className="w-full sm:w-[300px]"
+                    className="w-full sm:w-[300px] border border-[#f0f0f0]"
                     hoverable
-                    onClick={(e) => handleNavigateEditor(e, docId)}
+                    cover={
+                        <img
+                            onClick={() => handleNavigateEditor(docId)}
+                            alt="card-cover"
+                            src={ImageEmptyDiagram}
+                        />
+                    }
+                    actions={[
+                        <EditOutlined
+                            key="edit"
+                            onClick={() => handleNavigateEditor(docId)}
+                        />,
+                        <ShareAltOutlined key="share" />,
+                        <Popover
+                            trigger={"click"}
+                            arrow={false}
+                            open={state.contextPopover}
+                            id="card-context-menu-popover"
+                            rootClassName="card-context-menu-popover"
+                            content={
+                                <div className="flex flex-col">
+                                    {contextMenu.map((item) => (
+                                        <div
+                                            key={`context-popover-${item.key}`}
+                                            onClick={item.onClick}
+                                            className="flex items-center text-[14px] px-[12px] py-[5px] cursor-pointer rounded-lg hover:bg-[rgba(0,0,0,0.04)]"
+                                        >
+                                            <div className="min-w-[14px] me-2">{item.icon}</div>
+                                            <div>{item.label}</div>
+                                        </div>
+                                    ))}
+                                </div>
+                            }
+                        >
+                            <EllipsisOutlined
+                                key="ellipsis"
+                                id={`context-menu-icon-${docId}`}
+                                onClick={() => setState(prev => ({...prev, contextPopover: !prev.contextPopover}))}
+                            />
+                        </Popover>,
+                    ]}
                 >
-                    <p className="text-sm font-medium truncate">{title}</p>
+                    <p
+                        onClick={() => handleNavigateEditor(docId)}
+                        className="text-sm font-medium truncate"
+                    >
+                        {title}
+                    </p>
                 </Card>
             </Dropdown>
             <Modal
@@ -127,7 +196,7 @@ const FileCard = (props: FileCardProps) => {
             >
                 <div>This note will be deleted, Are you sure?</div>
             </Modal>
-        </>
+        </div>
     )
 }
 
