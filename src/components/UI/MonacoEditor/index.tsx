@@ -4,19 +4,18 @@ import { initEditor } from '@core/mermaid';
 
 interface MonacoEditorProps {
     handleChangeCode: (value: string) => void;
+    code: string;
 };
 
 const MonacoEditor = (props: MonacoEditorProps) => {
 
-    const { handleChangeCode } = props;
+    const { handleChangeCode, code } = props;
 
     const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
 
     useEffect(() => {
         const editorContainer = document.getElementById('monaco-mermaid');
-        console.log({editorContainer});
         if (editorContainer) {
-            console.log("running");
             editorRef.current = monaco.editor.create(editorContainer, {
                 language: 'mermaid',
                 minimap: {
@@ -27,13 +26,14 @@ const MonacoEditor = (props: MonacoEditorProps) => {
                 overviewRulerLanes: 0,
                 quickSuggestions: true,
                 scrollBeyondLastLine: false,
-                value: '',
+                value: code || '',
             });
 
             editorRef.current.onDidChangeModelContent(({ isFlush }) => {
                 if (isFlush) return;
                 const newValue = editorRef.current?.getValue();
                 if (newValue) {
+                    console.log({newValue});
                     handleChangeCode(newValue);
                 }
             });
@@ -62,6 +62,21 @@ const MonacoEditor = (props: MonacoEditorProps) => {
         }
     }, []);
 
+    useEffect(() => {
+        if (editorRef.current && code) {
+            const currentValue = editorRef.current.getValue();
+            if (currentValue !== code) {
+                editorRef.current.setValue(code || '');
+                const model = editorRef.current.getModel(); // get value of monaco editor
+        
+                if (model) {
+                    const position = model.getPositionAt(model.getValueLength());
+                    editorRef.current.setPosition(position);
+                    editorRef.current.focus();
+                }
+            }
+        }
+    }, [code]);
 
     return (
         <div id='editor' className='flex flex-col h-full w-full p-1'>

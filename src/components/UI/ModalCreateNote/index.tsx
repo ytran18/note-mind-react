@@ -4,7 +4,8 @@ import type { TourProps } from 'antd';
 import useAuth from "@hooks/useAuth";
 
 import { Document } from "@utils/interface";
-import { handleUploadPDF, getUserDocuments } from "@utils/funciton";
+import { handleUploadPDF } from "@utils/funciton";
+import { mermaidTemplate } from "@constants/constants";
 
 import { collection, doc, setDoc } from 'firebase/firestore';
 import { fireStore } from "@core/firebase/firebase";
@@ -131,6 +132,7 @@ const ModalCreateNote = (props: ModalCreateNoteProps) => {
             async onFinish () {
                 try {
                     const pdfUrl = state.noteType === 'pdf' && await handleUploadPDF(state.file?.[0]);
+                    const code = state.noteType === 'mermaid' && mermaidTemplate(state.selectedMermaidTemplate);
     
                     const Doc: Document = {
                         _id: v4(),
@@ -138,7 +140,7 @@ const ModalCreateNote = (props: ModalCreateNoteProps) => {
                         owner: user.user?._id!,
                         noteType: state.noteType,
                         createdAt: new Date().getTime(),
-                        code: '',
+                        code: code || '',
                         note: [],
                         pdfUrl: pdfUrl || '',
                         mermaidType: state.noteType === 'mermaid' ? state.selectedMermaidTemplate : '',

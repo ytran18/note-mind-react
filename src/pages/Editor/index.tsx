@@ -34,10 +34,6 @@ const Editor = () => {
         });
     },[pathname.editorId]);
 
-    const handleChangeTab = (tab: number) => {
-        setState(prev => ({...prev, tabActive: tab}));
-    };
-
     const handleNavigateBack = () => {
         navigate('/mainpage');  
     };
@@ -70,7 +66,9 @@ const Editor = () => {
                             style={{height: 'calc(100% - 26px)'}}
                             className="w-full"
                         >
-                            <MermaidEditor />
+                            <MermaidEditor
+                                code={state.document?.code}
+                            />
                         </div>
                     )}
                 </>

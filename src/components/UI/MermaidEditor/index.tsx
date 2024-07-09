@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "../Resizable";
 
 import MonacoEditor from "../MonacoEditor";
@@ -10,11 +10,21 @@ interface MermaidEditorState {
     codeValue: string;
 };
 
-const MermaidEditor = () => {
+interface MermaidChartProps {
+    code: string;
+};
+
+const MermaidEditor = (props: MermaidChartProps) => {
+
+    const { code } = props;
 
     const [state, setState] = useState<MermaidEditorState>({
         codeValue: '',
     });
+
+    useEffect(() => {
+        if (code) setState(prev => ({...prev, codeValue: code}));
+    },[]);
 
     const diagramRef = useRef<HTMLDivElement | null>(null);
 
@@ -28,6 +38,7 @@ const MermaidEditor = () => {
                 <ResizablePanel defaultSize={50} minSize={30}>
                     <div id="monaco-editor" className="h-full flex items-center justify-center border rounded-md border-[rgb(229,230,230)]">
                         <MonacoEditor
+                            code={state.codeValue}
                             handleChangeCode={handleChangeCode}
                         />
                     </div>
