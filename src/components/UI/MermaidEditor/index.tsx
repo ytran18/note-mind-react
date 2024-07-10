@@ -1,10 +1,13 @@
 import { useState, useRef, useEffect } from "react";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "../Resizable";
 
+import { message } from "antd";
+
 import { doc, collection, updateDoc } from 'firebase/firestore';
 import { fireStore } from "@core/firebase/firebase";
 
 import { mermaidTemplate } from "@constants/constants";
+import { dataURItoBlob } from "@utils/funciton";
 
 import MonacoEditor from "../MonacoEditor";
 import MermaidChart from "../MermaidChart";
@@ -24,11 +27,12 @@ interface MermaidChartProps {
     code: string;
     mermaidType: string;
     docId: string;
+    title: string;
 };
 
 const MermaidEditor = (props: MermaidChartProps) => {
 
-    const { code, mermaidType, docId } = props;
+    const { code, mermaidType, docId, title } = props;
 
     const [state, setState] = useState<MermaidEditorState>({
         codeValue: '',
@@ -114,6 +118,73 @@ const MermaidEditor = (props: MermaidChartProps) => {
                 view: window
             });
             sidebarElement.dispatchEvent(clickEvent);
+        };
+
+        if (type === 'export-svg' && diagramRef.current) {
+            const svg = diagramRef.current.innerHTML;
+            const svgBlob = new Blob([svg], { type: 'image/svg+xml' });
+            const url = URL.createObjectURL(svgBlob);
+
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${title}.svg`;
+            document.body.appendChild(a);
+            a.click();
+            URL.revokeObjectURL(url);
+        };
+
+        if (type === 'export-png' || type === 'export-clipboard') {
+            const svgContainer = document.querySelector('svg[id^="mermaid-"]') as SVGElement | null;
+
+            if (!svgContainer) {
+                message.error('SVG container not found')
+                return;
+            };
+        
+            const canvas = document.createElement('canvas');
+            const viewBox = svgContainer.getAttribute('viewBox')?.split(' ') || [];
+            const w = parseFloat(viewBox[2]);
+            const h = parseFloat(viewBox[3]);
+        
+            canvas.width = w;
+            canvas.height = h;
+        
+            const ctx = canvas.getContext('2d');
+            if (!ctx) {
+                message.error('Canvas context not found');
+                return;
+            };
+        
+            const image = new Image();
+            image.src = 'data:image/svg+xml;base64,' + btoa(new XMLSerializer().serializeToString(svgContainer));
+            image.onload = async function () {
+                ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+                const imgData = canvas.toDataURL('image/png');
+
+                if (type === 'export-png') {
+                    const a = document.createElement('a');
+                    a.href = imgData;
+                    a.download = `${title}.png`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                };
+
+                if (type === 'export-clipboard') {
+                    const blob = dataURItoBlob(imgData);
+
+                    try {
+                        await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+                        message.success('Image copied to clipboard');
+                    } catch (error) {
+                        message.error('Failed to copy image to clipboard');
+                    }
+                };
+        
+            }
+            image.onerror = function (error) {
+                message.error('Failed to load image');
+            };
         };
     };
     

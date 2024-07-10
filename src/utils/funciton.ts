@@ -65,3 +65,16 @@ export const getUserDocuments = async (user: User) => {
 export const compare = (a: any, b: any) => {
     return b?.createdAt - a?.createdAt;
 };
+
+export const dataURItoBlob = (dataURI: string) => {
+    var byteString = atob(dataURI.split(',')[1]);
+    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+    var arrayBuffer = new ArrayBuffer(byteString.length);
+    var uint8Array = new Uint8Array(arrayBuffer);
+  
+    for (var i = 0; i < byteString.length; i++) {
+      uint8Array[i] = byteString.charCodeAt(i);
+    }
+  
+    return new Blob([arrayBuffer], { type: mimeString });
+}

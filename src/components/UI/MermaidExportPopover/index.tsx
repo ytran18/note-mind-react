@@ -9,6 +9,7 @@ const MermaidExportPopover = (props: MermaidExportPopoverProps) => {
     const menu = [
         { label: 'Export as PNG', key: 'export-png' },
         { label: 'Export as SVG', key: 'export-svg' },
+        { label: 'Copy to Clipboard', key: 'export-clipboard' },
     ];
 
     return (

@@ -67,6 +67,7 @@ const Editor = () => {
                             className="w-full"
                         >
                             <MermaidEditor
+                                title={state.document?.title}
                                 code={state.document?.code}
                                 mermaidType={state.document?.mermaidType}
                                 docId={state.document?._id}
