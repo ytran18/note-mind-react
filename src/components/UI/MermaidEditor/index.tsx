@@ -10,6 +10,7 @@ import './style.scss';
 interface MermaidEditorState {
     codeValue: string;
     mermaidType: string;
+    themeSelect: string;
 };
 
 interface MermaidChartProps {
@@ -23,7 +24,8 @@ const MermaidEditor = (props: MermaidChartProps) => {
 
     const [state, setState] = useState<MermaidEditorState>({
         codeValue: '',
-        mermaidType: ''
+        mermaidType: '',
+        themeSelect: 'theme-mermaid',
     });
 
     useEffect(() => {
@@ -41,12 +43,29 @@ const MermaidEditor = (props: MermaidChartProps) => {
         setState(prev => ({...prev, codeValue: value}));
     };
 
+    const handleSelectTheme = (theme: string) => {
+        const sidebarElement = document.getElementById('mermaid-sidebar-themes')
+
+        if (sidebarElement) {
+            const clickEvent = new MouseEvent('click', {
+                bubbles: true,
+                cancelable: true,
+                view: window
+            });
+            sidebarElement.dispatchEvent(clickEvent);
+        };
+
+        setState(prev => ({...prev, themeSelect: theme}));
+    };
+
     return (
         <div className="w-full h-full flex relative">
             <div className="h-full">
                 <MermaidSidebar
                     mermaidType={state.mermaidType}
+                    themeSelect={state.themeSelect}
                     handleSelectMermaidTemplate={handleSelectMermaidTemplate}
+                    handleSelectTheme={handleSelectTheme}
                 />
             </div>
             <div className="h-full flex flex-grow gap-[3px]">

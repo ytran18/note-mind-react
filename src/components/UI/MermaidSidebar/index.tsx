@@ -15,19 +15,23 @@ import IconSetting from '@icons/iconSetting.svg';
 import IconDoc from '@icons/iconDoc.svg';
 import IconTemplate from '@icons/iconTemplate.svg';
 
+import './style.scss';
+
 interface MermaidSidebarState {
     isCollapase: boolean;
 };
 
 interface MermaidSidebarProps {
     mermaidType: string;
+    themeSelect: string;
     handleSelectMermaidTemplate: (tag: string, checked: boolean) => void;
+    handleSelectTheme: (theme: string) => void;
 }
 
 const MermaidSidebar = (props: MermaidSidebarProps) => {
 
-    
-    const { mermaidType, handleSelectMermaidTemplate } = props;
+    const { mermaidType, themeSelect } = props;
+    const { handleSelectTheme, handleSelectMermaidTemplate } = props;
 
     const [state, setState] = useState<MermaidSidebarState>({
         isCollapase: false,
@@ -47,6 +51,14 @@ const MermaidSidebar = (props: MermaidSidebarProps) => {
             setState(prev => ({...prev, isCollapase: !prev.isCollapase}));
             return;
         };
+
+        if (key === 'themes') {
+            const popoverElement = document.querySelector(`.mermaid-sidebar-themes`);
+
+            if (popoverElement) {
+                popoverElement.classList.remove('ant-popover-hidden')
+            };
+        };
     };
 
     const renderPopover = (key: string) => {
@@ -57,7 +69,12 @@ const MermaidSidebar = (props: MermaidSidebarProps) => {
                     handleSelectMermaidTemplate={handleSelectMermaidTemplate}
                 />
             ),
-            'themes' : <MermaidThemesPopover />,
+            'themes' : (
+                <MermaidThemesPopover
+                    themeSelect={themeSelect}
+                    handleSelectTheme={handleSelectTheme}
+                />
+            ),
             'export' : <MermaidExportPopover />,
             'settings' : <MermaidSettingsPopover />,
         }[key];
@@ -66,7 +83,7 @@ const MermaidSidebar = (props: MermaidSidebarProps) => {
     };
 
     return (
-        <div className="h-full w-fit flex flex-col border border-[rgb(229,230,230)] rounded-tl-md rounded-bl-md p-2 gap-2 bg-[rgba(229,237,255,0.3)]">
+        <div className="mermaid-sidebar h-full w-fit flex flex-col border border-[rgb(229,230,230)] rounded-tl-md rounded-bl-md p-2 gap-2 bg-[rgba(229,237,255,0.3)]">
             {menu.map((item) => {
                 return (
                     <>
@@ -87,6 +104,7 @@ const MermaidSidebar = (props: MermaidSidebarProps) => {
                             <Popover
                                 trigger={'click'}
                                 arrow={false}
+                                rootClassName={`mermaid-sidebar-${item.key}`}
                                 content={
                                     <div className=''>
                                         {renderPopover(item.key)}
@@ -97,6 +115,7 @@ const MermaidSidebar = (props: MermaidSidebarProps) => {
                                 <div
                                     className='w-full flex flex-nowrap whitespace-nowrap p-2 gap-2 items-center cursor-pointer text-[#00237a] font-medium hover:bg-[rgb(204,218,255)] rounded-md transition-colors duration-200'
                                     key={item.key}
+                                    id={`mermaid-sidebar-${item.key}`}
                                     onClick={() => handleMenuClick(item.key)}
                                 >
                                     <div className='flex h-5 w-5 gap-2 align-middle'>
