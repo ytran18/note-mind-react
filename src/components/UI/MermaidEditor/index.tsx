@@ -11,6 +11,7 @@ interface MermaidEditorState {
     codeValue: string;
     mermaidType: string;
     themeSelect: string;
+    autoSync: boolean;
 };
 
 interface MermaidChartProps {
@@ -26,6 +27,7 @@ const MermaidEditor = (props: MermaidChartProps) => {
         codeValue: '',
         mermaidType: '',
         themeSelect: 'theme-mermaid',
+        autoSync: true,
     });
 
     useEffect(() => {
@@ -70,6 +72,10 @@ const MermaidEditor = (props: MermaidChartProps) => {
             sidebarElement.dispatchEvent(clickEvent);
         };
     };
+    
+    const handleSwitchAutoSync = (checked: boolean) => {
+        setState(prev => ({...prev, autoSync: checked}));
+    };
 
     return (
         <div className="w-full h-full flex relative">
@@ -77,9 +83,11 @@ const MermaidEditor = (props: MermaidChartProps) => {
                 <MermaidSidebar
                     mermaidType={state.mermaidType}
                     themeSelect={state.themeSelect}
+                    autoSync={state.autoSync}
                     handleSelectMermaidTemplate={handleSelectMermaidTemplate}
                     handleSelectTheme={handleSelectTheme}
                     handleExport={handleExport}
+                    handleSwitchAutoSync={handleSwitchAutoSync}
                 />
             </div>
             <div className="h-full flex flex-grow gap-[3px]">

@@ -25,15 +25,17 @@ interface MermaidSidebarState {
 interface MermaidSidebarProps {
     mermaidType: string;
     themeSelect: string;
+    autoSync: boolean;
     handleSelectMermaidTemplate: (tag: string, checked: boolean) => void;
     handleSelectTheme: (theme: string) => void;
     handleExport: (type: string) => void;
+    handleSwitchAutoSync: (checked: boolean) => void;
 }
 
 const MermaidSidebar = (props: MermaidSidebarProps) => {
 
-    const { mermaidType, themeSelect } = props;
-    const { handleSelectTheme, handleSelectMermaidTemplate, handleExport } = props;
+    const { mermaidType, themeSelect, autoSync } = props;
+    const { handleSelectTheme, handleSelectMermaidTemplate, handleExport, handleSwitchAutoSync } = props;
 
     const [state, setState] = useState<MermaidSidebarState>({
         isCollapase: false,
@@ -76,7 +78,12 @@ const MermaidSidebar = (props: MermaidSidebarProps) => {
                     handleExport={handleExport}
                 />
             ),
-            'settings' : <MermaidSettingsPopover />,
+            'settings' : (
+                <MermaidSettingsPopover
+                    autoSync={autoSync}
+                    handleSwitchAutoSync={handleSwitchAutoSync}
+                />
+            )
         }[key];
 
         return popover;
