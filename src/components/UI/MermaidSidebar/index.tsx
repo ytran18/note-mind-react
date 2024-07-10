@@ -19,6 +19,7 @@ import './style.scss';
 
 interface MermaidSidebarState {
     isCollapase: boolean;
+    tabActive: number | null;
 };
 
 interface MermaidSidebarProps {
@@ -35,6 +36,7 @@ const MermaidSidebar = (props: MermaidSidebarProps) => {
 
     const [state, setState] = useState<MermaidSidebarState>({
         isCollapase: false,
+        tabActive: null,
     });
 
     const menu = [
@@ -46,7 +48,8 @@ const MermaidSidebar = (props: MermaidSidebarProps) => {
         { label: 'Diagram help', icon: <IconDoc />, key: 'help' },
     ];
 
-    const handleMenuClick = (key: string) => {
+    const handleMenuClick = (key: string, index: number) => {
+        setState(prev => ({...prev, tabActive: index}));
         if (key === 'collapse-menu') {
             setState(prev => ({...prev, isCollapase: !prev.isCollapase}));
             return;
@@ -84,14 +87,14 @@ const MermaidSidebar = (props: MermaidSidebarProps) => {
 
     return (
         <div className="mermaid-sidebar h-full w-fit flex flex-col border border-[rgb(229,230,230)] rounded-tl-md rounded-bl-md p-2 gap-2 bg-[rgba(229,237,255,0.3)]">
-            {menu.map((item) => {
+            {menu.map((item, index) => {
                 return (
                     <>
                         {(item.key === 'collapse-menu' || item.key === 'help') ? (
                             <div
-                                className='w-full flex flex-nowrap whitespace-nowrap p-2 gap-2 items-center cursor-pointer text-[#00237a] font-medium hover:bg-[rgb(204,218,255)] rounded-md transition-colors duration-200'
+                                className={`w-full flex flex-nowrap whitespace-nowrap p-2 gap-2 items-center cursor-pointer text-[#00237a] font-medium hover:bg-[rgb(204,218,255)] rounded-md transition-colors duration-200 ${(state.tabActive === index && index !== 0) ? 'bg-[rgb(47,66,235)] text-white' : ''}`}
                                 key={item.key}
-                                onClick={() => handleMenuClick(item.key)}
+                                onClick={() => handleMenuClick(item.key, index)}
                             >
                                 <div className='flex h-5 w-5 gap-2 align-middle'>
                                     {item.icon}
@@ -113,10 +116,10 @@ const MermaidSidebar = (props: MermaidSidebarProps) => {
                                 placement='bottomRight'
                             >
                                 <div
-                                    className='w-full flex flex-nowrap whitespace-nowrap p-2 gap-2 items-center cursor-pointer text-[#00237a] font-medium hover:bg-[rgb(204,218,255)] rounded-md transition-colors duration-200'
+                                    className={`w-full flex flex-nowrap whitespace-nowrap p-2 gap-2 items-center cursor-pointer text-[#00237a] font-medium hover:bg-[rgb(204,218,255)] rounded-md transition-colors duration-200 ${state.tabActive === index ? 'bg-[rgb(47,66,235)] text-white' : ''}`}
                                     key={item.key}
                                     id={`mermaid-sidebar-${item.key}`}
-                                    onClick={() => handleMenuClick(item.key)}
+                                    onClick={() => handleMenuClick(item.key, index)}
                                 >
                                     <div className='flex h-5 w-5 gap-2 align-middle'>
                                         {item.icon}
