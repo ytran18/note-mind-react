@@ -20,15 +20,12 @@ interface MermaidChartProps {
     code: string;
     isSync: boolean;
     autoSync: boolean;
+    themeSelect: string;
 };
-
-mermaid.initialize({
-    startOnLoad: true,
-});
 
 const MermaidChart = forwardRef<HTMLDivElement, MermaidChartProps>((props: MermaidChartProps, ref) => {
 
-    const { code, isSync, autoSync } = props;
+    const { code, isSync, autoSync, themeSelect } = props;
 
     const [state, setState] = useState<MermaidChartState>({
         errMessage: '',
@@ -51,6 +48,11 @@ const MermaidChart = forwardRef<HTMLDivElement, MermaidChartProps>((props: Merma
     };
 
     useEffect(() => {
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: themeSelect,
+        });
+
         const onHandleMermaidData = async (value: string) => {
             const mermaidChart = document.getElementById("mermaid-chart");
             
@@ -78,7 +80,7 @@ const MermaidChart = forwardRef<HTMLDivElement, MermaidChartProps>((props: Merma
         };
 
         !(!autoSync && !isSync) && onHandleMermaidData(code);
-    }, [code, state.isErr, ref, autoSync, isSync]);
+    }, [code, state.isErr, ref, autoSync, isSync, themeSelect]);
 
     useEffect(() => {
         const lines = state.errMessage.split('\n');

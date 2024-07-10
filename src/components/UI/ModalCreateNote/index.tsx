@@ -144,6 +144,7 @@ const ModalCreateNote = (props: ModalCreateNoteProps) => {
                         note: [],
                         pdfUrl: pdfUrl || '',
                         mermaidType: state.noteType === 'mermaid' ? state.selectedMermaidTemplate : '',
+                        mermaidTheme: 'default'
                     };
     
                     const docRef = doc(collection(fireStore, 'documents'), Doc._id);

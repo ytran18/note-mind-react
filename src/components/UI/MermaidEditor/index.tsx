@@ -29,23 +29,24 @@ interface MermaidChartProps {
     mermaidType: string;
     docId: string;
     title: string;
+    mermaidTheme: string;
 };
 
 const MermaidEditor = (props: MermaidChartProps) => {
 
-    const { code, mermaidType, docId, title } = props;
+    const { code, mermaidType, docId, title, mermaidTheme } = props;
 
     const [state, setState] = useState<MermaidEditorState>({
         codeValue: '',
         mermaidType: '',
-        themeSelect: 'theme-mermaid',
+        themeSelect: 'default',
         autoSync: false,
         isFirstTimeLoad: true,
         isSync: true,
     });
 
     useEffect(() => {
-        if (code) setState(prev => ({...prev, codeValue: code, mermaidType: mermaidType}));
+        if (code) setState(prev => ({...prev, codeValue: code, mermaidType: mermaidType, themeSelect: mermaidTheme}));
     },[]);
 
     const handleSelectMermaidTemplate = (tag: string, checked: boolean) => {
@@ -106,7 +107,7 @@ const MermaidEditor = (props: MermaidChartProps) => {
         return () => clearTimeout(searchTimeout);
     },[state.codeValue]);
 
-    const handleSelectTheme = (theme: string) => {
+    const handleSelectTheme = async (theme: string) => {
         const sidebarElement = document.getElementById('mermaid-sidebar-themes')
 
         if (sidebarElement) {
@@ -117,6 +118,11 @@ const MermaidEditor = (props: MermaidChartProps) => {
             });
             sidebarElement.dispatchEvent(clickEvent);
         };
+
+        const docRef = doc(collection(fireStore, 'documents'), docId);
+        await updateDoc(docRef, {
+            mermaidTheme: theme,
+        });
 
         setState(prev => ({...prev, themeSelect: theme}));
     };
@@ -245,6 +251,7 @@ const MermaidEditor = (props: MermaidChartProps) => {
                                 code={state.codeValue}
                                 isSync={state.isSync}
                                 autoSync={state.autoSync}
+                                themeSelect={state.themeSelect}
                                 ref={diagramRef}
                             />
                         </div>

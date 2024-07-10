@@ -8,12 +8,11 @@ const MermaidThemesPopover = (props: MermaidThemesPopoverProps) => {
     const {themeSelect, handleSelectTheme  } = props;
 
     const menu = [
-        { label: 'Mermaid Chart', key: 'theme-mermaid' },
-        { label: 'Default', key: 'theme-default' },
-        { label: 'Forest', key: 'theme-forest' },
-        { label: 'Base', key: 'theme-base' },
-        { label: 'Dark', key: 'theme-dark' },
-        { label: 'Neutral', key: 'theme-neutral' },
+        { label: 'Mermaid Chart', key: 'default' },
+        { label: 'Forest', key: 'forest' },
+        { label: 'Base', key: 'base' },
+        { label: 'Dark', key: 'dark' },
+        { label: 'Neutral', key: 'neutral' },
     ];
 
     return (

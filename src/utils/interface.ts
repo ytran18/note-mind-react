@@ -18,6 +18,7 @@ export interface Document {
     createdAt: number;
     note?: any[];
     code?: string;
+    mermaidTheme?: string;
 }
 
 // type

@@ -68,6 +68,7 @@ const Editor = () => {
                         >
                             <MermaidEditor
                                 title={state.document?.title}
+                                mermaidTheme={state.document?.mermaidTheme}
                                 code={state.document?.code}
                                 mermaidType={state.document?.mermaidType}
                                 docId={state.document?._id}
