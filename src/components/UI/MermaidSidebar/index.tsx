@@ -27,12 +27,13 @@ interface MermaidSidebarProps {
     themeSelect: string;
     handleSelectMermaidTemplate: (tag: string, checked: boolean) => void;
     handleSelectTheme: (theme: string) => void;
+    handleExport: (type: string) => void;
 }
 
 const MermaidSidebar = (props: MermaidSidebarProps) => {
 
     const { mermaidType, themeSelect } = props;
-    const { handleSelectTheme, handleSelectMermaidTemplate } = props;
+    const { handleSelectTheme, handleSelectMermaidTemplate, handleExport } = props;
 
     const [state, setState] = useState<MermaidSidebarState>({
         isCollapase: false,
@@ -54,14 +55,6 @@ const MermaidSidebar = (props: MermaidSidebarProps) => {
             setState(prev => ({...prev, isCollapase: !prev.isCollapase}));
             return;
         };
-
-        if (key === 'themes') {
-            const popoverElement = document.querySelector(`.mermaid-sidebar-themes`);
-
-            if (popoverElement) {
-                popoverElement.classList.remove('ant-popover-hidden')
-            };
-        };
     };
 
     const renderPopover = (key: string) => {
@@ -78,7 +71,11 @@ const MermaidSidebar = (props: MermaidSidebarProps) => {
                     handleSelectTheme={handleSelectTheme}
                 />
             ),
-            'export' : <MermaidExportPopover />,
+            'export' : (
+                <MermaidExportPopover
+                    handleExport={handleExport}
+                />
+            ),
             'settings' : <MermaidSettingsPopover />,
         }[key];
 

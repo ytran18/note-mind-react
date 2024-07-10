@@ -58,6 +58,19 @@ const MermaidEditor = (props: MermaidChartProps) => {
         setState(prev => ({...prev, themeSelect: theme}));
     };
 
+    const handleExport = (type: string) => {
+        const sidebarElement = document.getElementById('mermaid-sidebar-export')
+
+        if (sidebarElement) {
+            const clickEvent = new MouseEvent('click', {
+                bubbles: true,
+                cancelable: true,
+                view: window
+            });
+            sidebarElement.dispatchEvent(clickEvent);
+        };
+    };
+
     return (
         <div className="w-full h-full flex relative">
             <div className="h-full">
@@ -66,6 +79,7 @@ const MermaidEditor = (props: MermaidChartProps) => {
                     themeSelect={state.themeSelect}
                     handleSelectMermaidTemplate={handleSelectMermaidTemplate}
                     handleSelectTheme={handleSelectTheme}
+                    handleExport={handleExport}
                 />
             </div>
             <div className="h-full flex flex-grow gap-[3px]">
