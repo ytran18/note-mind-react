@@ -77,4 +77,26 @@ export const dataURItoBlob = (dataURI: string) => {
     }
   
     return new Blob([arrayBuffer], { type: mimeString });
-}
+};
+
+export const getMermaidUrlDiagramHelp = (mermaidType: string) => {
+    const url = {
+        'Flow' : 'https://mermaid.js.org/syntax/flowchart.html',
+        'Sequence': 'https://mermaid.js.org/syntax/sequenceDiagram.html',
+        'Class': 'https://mermaid.js.org/syntax/classDiagram.html',
+        'State': 'https://mermaid.js.org/syntax/stateDiagram.html',
+        'ER': 'https://mermaid.js.org/syntax/entityRelationshipDiagram.html',
+        'User Journey': 'https://mermaid.js.org/syntax/userJourney.html',
+        'Gantt': 'https://mermaid.js.org/syntax/gantt.html',
+        'Pie': 'https://mermaid.js.org/syntax/pie.html',
+        'Quadrant Chart': 'https://mermaid.js.org/syntax/quadrantChart.html',
+        'Requirement': 'https://mermaid.js.org/syntax/requirementDiagram.html',
+        'Git': 'https://mermaid.js.org/syntax/gitgraph.html',
+        'C4': 'https://mermaid.js.org/syntax/c4.html',
+        'Mindmap': 'https://mermaid.js.org/syntax/mindmap.html',
+        'Timeline': 'https://mermaid.js.org/syntax/timeline.html',
+        'Sankey': 'https://mermaid.js.org/syntax/sankey.html',
+    }[mermaidType];
+
+    return url;
+};

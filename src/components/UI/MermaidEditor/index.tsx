@@ -53,7 +53,7 @@ const MermaidEditor = (props: MermaidChartProps) => {
         setState(prev => ({...prev, mermaidType: nextSelectedTags}))
     };
 
-    const handleApplyTemplate = () => {
+    const handleApplyTemplate = async () => {
         const { mermaidType } = state;
 
         const sidebarElement = document.getElementById('mermaid-sidebar-templates')
@@ -68,6 +68,12 @@ const MermaidEditor = (props: MermaidChartProps) => {
         };
 
         const templateCode: string = mermaidTemplate(mermaidType);
+
+        const docRef = doc(collection(fireStore, 'documents'), docId);
+        await updateDoc(docRef, {
+            mermaidType: mermaidType,
+        });
+
         setState(prev => ({...prev, codeValue: templateCode, isFirstTimeLoad: false}));
     };
 

@@ -7,6 +7,8 @@ import MermaidThemesPopover from '../MermaidThemesPopover';
 import MermaidExportPopover from '../MermaidExportPopover';
 import MermaidSettingsPopover from '../MermaidSettingsPopover';
 
+import { getMermaidUrlDiagramHelp } from '@utils/funciton';
+
 import IconExpand from '@icons/iconExpand.svg';
 import IconCollapse from '@icons/iconCollapse.svg';
 import IconThemes from '@icons/iconTheme.svg';
@@ -55,9 +57,15 @@ const MermaidSidebar = (props: MermaidSidebarProps) => {
 
     const handleMenuClick = (key: string, index: number) => {
         setState(prev => ({...prev, tabActive: index}));
+
         if (key === 'collapse-menu') {
             setState(prev => ({...prev, isCollapase: !prev.isCollapase}));
             return;
+        };
+
+        if (key === 'help') {
+            const url = getMermaidUrlDiagramHelp(mermaidType);
+            window.open(url, '_blank');
         };
     };
 
