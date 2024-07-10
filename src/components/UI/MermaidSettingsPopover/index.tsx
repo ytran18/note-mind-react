@@ -5,11 +5,12 @@ import IconSync from '@icons/iconSync.svg';
 interface MermaidSettingsPopoverProps {
     autoSync: boolean;
     handleSwitchAutoSync: (checked: boolean) => void;
+    handleSyncCode: () => void;
 };
 
 const MermaidSettingsPopover = (props: MermaidSettingsPopoverProps) => {
 
-    const { autoSync, handleSwitchAutoSync } = props;
+    const { autoSync, handleSwitchAutoSync, handleSyncCode } = props;
 
     return (
         <div className="flex flex-col gap-3 font-medium">
@@ -23,7 +24,9 @@ const MermaidSettingsPopover = (props: MermaidSettingsPopoverProps) => {
                 </div>
             </div>
             <Button
+                disabled={autoSync}
                 className='font-medium'
+                onClick={handleSyncCode}
                 icon={<IconSync />}
             >
                 Sync diagram

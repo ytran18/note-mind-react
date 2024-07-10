@@ -21,6 +21,7 @@ interface MermaidEditorState {
     themeSelect: string;
     autoSync: boolean;
     isFirstTimeLoad: boolean;
+    isSync: boolean;
 };
 
 interface MermaidChartProps {
@@ -38,8 +39,9 @@ const MermaidEditor = (props: MermaidChartProps) => {
         codeValue: '',
         mermaidType: '',
         themeSelect: 'theme-mermaid',
-        autoSync: true,
+        autoSync: false,
         isFirstTimeLoad: true,
+        isSync: true,
     });
 
     useEffect(() => {
@@ -72,7 +74,12 @@ const MermaidEditor = (props: MermaidChartProps) => {
     const diagramRef = useRef<HTMLDivElement | null>(null);
 
     const handleChangeCode = (value: string) => {
-        setState(prev => ({...prev, codeValue: value, isFirstTimeLoad: false}));
+        setState(prev => ({
+            ...prev,
+            codeValue: value,
+            isFirstTimeLoad: false,
+            isSync: state.autoSync ? true : false,
+        }));
     };
 
     const handleUpdateCode = async (code: string) => {
@@ -192,6 +199,10 @@ const MermaidEditor = (props: MermaidChartProps) => {
         setState(prev => ({...prev, autoSync: checked}));
     };
 
+    const handleSyncCode = () => {
+        setState(prev => ({...prev, isSync: true}));
+    };
+
     return (
         <div className="w-full h-full flex relative">
             <div className="h-full">
@@ -204,6 +215,7 @@ const MermaidEditor = (props: MermaidChartProps) => {
                     handleExport={handleExport}
                     handleSwitchAutoSync={handleSwitchAutoSync}
                     handleApplyTemplate={handleApplyTemplate}
+                    handleSyncCode={handleSyncCode}
                 />
             </div>
             <div className="h-full flex flex-grow gap-[3px]">
@@ -212,7 +224,9 @@ const MermaidEditor = (props: MermaidChartProps) => {
                         <div id="monaco-editor" className="h-full flex items-center justify-center border border-[rgb(229,230,230)] rounded-tr-md rounded-br-md">
                             <MonacoEditor
                                 code={state.codeValue}
+                                autoSync={state.autoSync}
                                 handleChangeCode={handleChangeCode}
+                                handleSyncCode={handleSyncCode}
                             />
                         </div>
                     </ResizablePanel>
@@ -223,6 +237,8 @@ const MermaidEditor = (props: MermaidChartProps) => {
                         <div className="flex h-full justify-center items-center border rounded-md border-[rgb(229,230,230)]">
                             <MermaidChart
                                 code={state.codeValue}
+                                isSync={state.isSync}
+                                autoSync={state.autoSync}
                                 ref={diagramRef}
                             />
                         </div>

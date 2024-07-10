@@ -5,11 +5,13 @@ import { initEditor } from '@core/mermaid';
 interface MonacoEditorProps {
     handleChangeCode: (value: string) => void;
     code: string;
+    autoSync: boolean;
+    handleSyncCode: () => void;
 };
 
 const MonacoEditor = (props: MonacoEditorProps) => {
 
-    const { handleChangeCode, code } = props;
+    const { handleChangeCode, code, autoSync, handleSyncCode } = props;
 
     const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
 
@@ -39,6 +41,12 @@ const MonacoEditor = (props: MonacoEditorProps) => {
 
             monaco.editor.setTheme('mermaid');
             initEditor(monaco);
+
+            if (!autoSync) {
+                editorRef.current.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => {
+                    handleSyncCode();
+                });
+            };
 
             const resizeObserver = new ResizeObserver((entries) => {
                 requestAnimationFrame(() => {

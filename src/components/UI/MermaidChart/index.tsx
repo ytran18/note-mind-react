@@ -18,6 +18,8 @@ interface MermaidChartState {
 
 interface MermaidChartProps {
     code: string;
+    isSync: boolean;
+    autoSync: boolean;
 };
 
 mermaid.initialize({
@@ -26,7 +28,7 @@ mermaid.initialize({
 
 const MermaidChart = forwardRef<HTMLDivElement, MermaidChartProps>((props: MermaidChartProps, ref) => {
 
-    const { code } = props;
+    const { code, isSync, autoSync } = props;
 
     const [state, setState] = useState<MermaidChartState>({
         errMessage: '',
@@ -75,8 +77,8 @@ const MermaidChart = forwardRef<HTMLDivElement, MermaidChartProps>((props: Merma
             mermaidChart?.removeAttribute("data-processed");
         };
 
-        onHandleMermaidData(code);
-    }, [code, state.isErr, ref]);
+        !(!autoSync && !isSync) && onHandleMermaidData(code);
+    }, [code, state.isErr, ref, autoSync, isSync]);
 
     useEffect(() => {
         const lines = state.errMessage.split('\n');
@@ -84,11 +86,17 @@ const MermaidChart = forwardRef<HTMLDivElement, MermaidChartProps>((props: Merma
     },[state.errMessage]);
 
     return (
-        <div className='w-full h-full'>
+        <div className='w-full h-full relative'>
             <TransformWrapper minScale={0.5}>
                 {
                     ({ zoomIn, zoomOut, resetTransform, ...rest }) => (
                         <>
+                            {(!autoSync && !isSync) && (
+                                <div className='container absolute left-1/2 -translate-x-1/2 z-10 my-8 w-[70%] space-y-4 rounded-lg border bg-white bg-opacity-80 p-4 text-center text-[#00237a]'>
+                                    <p data-testid="out-of-sync-message">Your diagram is out of sync.</p>
+                                    <p className="text-center">When you're ready to sync your diagram, click on the Sync diagram button from the "More options" panel, or press on the&nbsp;Command ⌘ + Return ⏎ keys from within the text editor.</p>
+                                </div>
+                            )}
                             <div className='absolute w-[100px] h-[35px] flex justify-between px-[5px] right-[15px] bottom-[15px] bg-[rgb(67,153,225)] rounded z-[100]'>
                                 <div
                                     className="h-full flex items-center cursor-pointer text-[rgb(238,238,238)] hover:text-white"
@@ -110,7 +118,7 @@ const MermaidChart = forwardRef<HTMLDivElement, MermaidChartProps>((props: Merma
                                 </div>
                             </div>
                             <TransformComponent>
-                                <div ref={ref} id="mermaid-chart" className={`mermaid not-pie-chart ${state.isErr ? 'opacity-[0.4]' : ''}`}></div>
+                                <div ref={ref} id="mermaid-chart" className={`mermaid not-pie-chart ${(state.isErr || (!autoSync && !isSync)) ? 'opacity-[0.4]' : ''}`}></div>
                                 <div className="err-wrapper">
                                     {state.isErr && (
                                         state.errArray?.map((item, index) => {
