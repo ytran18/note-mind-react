@@ -30,12 +30,13 @@ interface MermaidSidebarProps {
     handleSelectTheme: (theme: string) => void;
     handleExport: (type: string) => void;
     handleSwitchAutoSync: (checked: boolean) => void;
+    handleApplyTemplate: () => void;
 }
 
 const MermaidSidebar = (props: MermaidSidebarProps) => {
 
     const { mermaidType, themeSelect, autoSync } = props;
-    const { handleSelectTheme, handleSelectMermaidTemplate, handleExport, handleSwitchAutoSync } = props;
+    const { handleSelectTheme, handleSelectMermaidTemplate, handleExport, handleSwitchAutoSync, handleApplyTemplate } = props;
 
     const [state, setState] = useState<MermaidSidebarState>({
         isCollapase: false,
@@ -65,6 +66,7 @@ const MermaidSidebar = (props: MermaidSidebarProps) => {
                 <MermaidTemplatePopover
                     mermaidType={mermaidType}
                     handleSelectMermaidTemplate={handleSelectMermaidTemplate}
+                    handleApplyTemplate={handleApplyTemplate}
                 />
             ),
             'themes' : (

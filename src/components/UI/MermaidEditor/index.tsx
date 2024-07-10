@@ -1,6 +1,11 @@
 import { useState, useRef, useEffect } from "react";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "../Resizable";
 
+import { doc, collection, updateDoc } from 'firebase/firestore';
+import { fireStore } from "@core/firebase/firebase";
+
+import { mermaidTemplate } from "@constants/constants";
+
 import MonacoEditor from "../MonacoEditor";
 import MermaidChart from "../MermaidChart";
 import MermaidSidebar from "../MermaidSidebar";
@@ -12,22 +17,25 @@ interface MermaidEditorState {
     mermaidType: string;
     themeSelect: string;
     autoSync: boolean;
+    isFirstTimeLoad: boolean;
 };
 
 interface MermaidChartProps {
     code: string;
     mermaidType: string;
+    docId: string;
 };
 
 const MermaidEditor = (props: MermaidChartProps) => {
 
-    const { code, mermaidType } = props;
+    const { code, mermaidType, docId } = props;
 
     const [state, setState] = useState<MermaidEditorState>({
         codeValue: '',
         mermaidType: '',
         themeSelect: 'theme-mermaid',
         autoSync: true,
+        isFirstTimeLoad: true,
     });
 
     useEffect(() => {
@@ -39,11 +47,47 @@ const MermaidEditor = (props: MermaidChartProps) => {
         setState(prev => ({...prev, mermaidType: nextSelectedTags}))
     };
 
+    const handleApplyTemplate = () => {
+        const { mermaidType } = state;
+
+        const sidebarElement = document.getElementById('mermaid-sidebar-templates')
+
+        if (sidebarElement) {
+            const clickEvent = new MouseEvent('click', {
+                bubbles: true,
+                cancelable: true,
+                view: window
+            });
+            sidebarElement.dispatchEvent(clickEvent);
+        };
+
+        const templateCode: string = mermaidTemplate(mermaidType);
+        setState(prev => ({...prev, codeValue: templateCode, isFirstTimeLoad: false}));
+    };
+
     const diagramRef = useRef<HTMLDivElement | null>(null);
 
     const handleChangeCode = (value: string) => {
-        setState(prev => ({...prev, codeValue: value}));
+        setState(prev => ({...prev, codeValue: value, isFirstTimeLoad: false}));
     };
+
+    const handleUpdateCode = async (code: string) => {
+        const docRef = doc(collection(fireStore, 'documents'), docId);
+        await updateDoc(docRef, {
+            code: code,
+        });
+    };
+
+    useEffect(() => {
+        const { codeValue, isFirstTimeLoad } = state;
+        if (isFirstTimeLoad) return;
+
+        const searchTimeout = setTimeout(() => {
+            if (codeValue) handleUpdateCode(codeValue);
+        }, 1000);
+
+        return () => clearTimeout(searchTimeout);
+    },[state.codeValue]);
 
     const handleSelectTheme = (theme: string) => {
         const sidebarElement = document.getElementById('mermaid-sidebar-themes')
@@ -88,6 +132,7 @@ const MermaidEditor = (props: MermaidChartProps) => {
                     handleSelectTheme={handleSelectTheme}
                     handleExport={handleExport}
                     handleSwitchAutoSync={handleSwitchAutoSync}
+                    handleApplyTemplate={handleApplyTemplate}
                 />
             </div>
             <div className="h-full flex flex-grow gap-[3px]">

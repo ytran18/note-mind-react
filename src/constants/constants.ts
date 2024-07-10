@@ -12,7 +12,7 @@ export const MonacoOptions = {
     scrollBeyondLastLine: false,
 };
 
-export const mermaidTemplate = (type: string) => {
+export const mermaidTemplate = (type: string): string => {
     const code = {
         'Flow' : Flow,
         'Sequence': Sequence,
@@ -31,5 +31,5 @@ export const mermaidTemplate = (type: string) => {
         'Sankey' : Sankey,
     }[type];
     
-    return code;
+    return code || '';
 };

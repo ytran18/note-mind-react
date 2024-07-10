@@ -22,13 +22,12 @@ const tagsData = ['Flow', 'Sequence', 'Class', 'State', 'ER', 'User Journey', 'G
 interface MermaidTemplatePopoverProps {
     mermaidType: string;
     handleSelectMermaidTemplate: (tag: string, checked: boolean) => void;
+    handleApplyTemplate: () => void;
 };
 
 const MermaidTemplatePopover = (props: MermaidTemplatePopoverProps) => {
 
-    const { mermaidType, handleSelectMermaidTemplate } = props;
-
-    // console.log({mermaidType});
+    const { mermaidType, handleSelectMermaidTemplate, handleApplyTemplate } = props;
 
     const renderMermaidPreviewSVG = (type: string) => {
         const returnIcon = {
@@ -72,7 +71,12 @@ const MermaidTemplatePopover = (props: MermaidTemplatePopoverProps) => {
                 </div>
             </div>
             <div className="w-full flex justify-end">
-                <Button type="primary">Select</Button>
+                <Button
+                    type="primary"
+                    onClick={handleApplyTemplate}
+                >
+                    Select
+                </Button>
             </div>
         </div>
     );
