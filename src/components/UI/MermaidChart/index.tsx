@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, forwardRef, MutableRefObject } from 'react';
+import { useEffect, useRef, useState, forwardRef } from 'react';
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
 import mermaid from 'mermaid';
 
@@ -67,13 +67,14 @@ const MermaidChart = forwardRef<HTMLDivElement, MermaidChartProps>((props: Merma
             }
 
             mermaid.parseError = (err: any) => {
-                if (code === '') return;
+                // if (value === '') return;
                 setState(prev => ({ ...prev, errMessage: err?.message }));
             };
 
             mermaid.contentLoaded();
             mermaidChart?.removeAttribute("data-processed");
         };
+
         onHandleMermaidData(code);
     }, [code, state.isErr, ref]);
 
