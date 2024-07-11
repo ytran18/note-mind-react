@@ -13,6 +13,8 @@ const MonacoEditor = (props: MonacoEditorProps) => {
 
     const { handleChangeCode, code, autoSync, handleSyncCode } = props;
 
+    const [loadMermaidTheme, setLoadMermaidTheme] = useState<number>(0);
+
     const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
 
     useEffect(() => {
@@ -39,11 +41,8 @@ const MonacoEditor = (props: MonacoEditorProps) => {
                 }
             });
 
-            setTimeout(() => {
-                console.log('running 123');
-                monaco.editor.setTheme('mermaid');
-                initEditor(monaco);
-            }, 100);
+            // monaco.editor.setTheme('mermaid');
+            // initEditor(monaco);
 
             if (!autoSync) {
                 editorRef.current.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => {
@@ -71,6 +70,14 @@ const MonacoEditor = (props: MonacoEditorProps) => {
             };
         }
     }, []);
+
+    useEffect(() => {
+        if (loadMermaidTheme > 1) return;
+
+        monaco.editor.setTheme('mermaid');
+        initEditor(monaco);
+        setLoadMermaidTheme(prev => prev + 1);
+    }, [loadMermaidTheme]);
 
     useEffect(() => {
         if (editorRef.current && code) {
