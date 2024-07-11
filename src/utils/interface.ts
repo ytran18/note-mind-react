@@ -19,6 +19,7 @@ export interface Document {
     note?: any[];
     code?: string;
     mermaidTheme?: string;
+    previewImg: string;
 }
 
 // type

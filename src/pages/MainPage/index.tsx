@@ -94,6 +94,8 @@ const MainPage = () => {
                                         <FileCard
                                             docId={item._id}
                                             title={item.title}
+                                            previewImg={item?.previewImg}
+                                            noteType={item?.noteType}
                                             getCards={getCards}
                                             handleNavigateEditor={handleNavigateEditor}
                                         />

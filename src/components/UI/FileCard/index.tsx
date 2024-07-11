@@ -12,6 +12,7 @@ import IconTrash from '@icons/iconTrash.svg';
 import IconCopy from '@icons/iconCopy.svg';
 
 import ImageEmptyDiagram from '@images/imageEmptyDiagram.png';
+import ImageEmptyNote from '@images/imageEmptyNote.png';
 
 import './style.scss';
 
@@ -20,6 +21,8 @@ interface FileCardProps {
     title: string;
     getCards: (user: any) => void;
     handleNavigateEditor: (/*e: React.MouseEvent<HTMLDivElement>, */ cardId: string) => void;
+    previewImg: string;
+    noteType: string;
 };
 
 interface FileCardState {
@@ -31,7 +34,7 @@ interface FileCardState {
 
 const FileCard = (props: FileCardProps) => {
 
-    const { docId, title, getCards, handleNavigateEditor } = props;
+    const { docId, title, getCards, handleNavigateEditor, noteType, previewImg } = props;
     const user = useAuth();
 
     const [state, setState] = useState<FileCardState>({
@@ -88,6 +91,16 @@ const FileCard = (props: FileCardProps) => {
 
     };
 
+    const imgPreview = () => {
+        const img = {
+            'mermaid': previewImg.length === 0 ? ImageEmptyDiagram : previewImg,
+            'pdf': previewImg.length === 0 ? ImageEmptyDiagram : previewImg,
+            'note': previewImg.length === 0 ? ImageEmptyNote : previewImg,
+        }[noteType];
+
+        return img;
+    };
+
     const contextMenu = [
         {
             label: 'Change title',
@@ -123,7 +136,8 @@ const FileCard = (props: FileCardProps) => {
                         <img
                             onClick={() => handleNavigateEditor(docId)}
                             alt="card-cover"
-                            src={ImageEmptyDiagram}
+                            className="w-[300px] h-[120px] object-cover"
+                            src={imgPreview()}
                         />
                     }
                     actions={[
