@@ -39,8 +39,10 @@ const MonacoEditor = (props: MonacoEditorProps) => {
                 }
             });
 
-            monaco.editor.setTheme('mermaid');
-            initEditor(monaco);
+            setTimeout(() => {
+                monaco.editor.setTheme('mermaid');
+                initEditor(monaco);
+            }, 100);
 
             if (!autoSync) {
                 editorRef.current.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => {
