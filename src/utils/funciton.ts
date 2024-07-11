@@ -3,6 +3,8 @@ import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { collection, getDocs, where, query } from 'firebase/firestore';
 import { storage, fireStore } from "@core/firebase/firebase";
 
+import html2canvas from 'html2canvas';
+
 // tailwind merge
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from "tailwind-merge";
@@ -99,4 +101,30 @@ export const getMermaidUrlDiagramHelp = (mermaidType: string) => {
     }[mermaidType];
 
     return url;
+};
+
+const handleGetBlob = async (): Promise<Blob | null> => {
+    const element = document.getElementById('mermaid-chart');
+
+    if (!element) return null;
+
+    const canvas = await html2canvas(element);
+
+    return new Promise(resolve => {
+        canvas.toBlob(function(blob) {
+            resolve(blob);
+        });
+    });
+};
+
+export const handleGetUrlPreview = async (noteId: string): Promise<string> => {
+    let previewURL = '';
+    const blob = await handleGetBlob();
+    if (!blob) return '';
+    
+    const imageRef = ref(storage, `preview/mermaid/${noteId}`);
+    const snapshot = await uploadBytes(imageRef, blob);
+    previewURL = await getDownloadURL(imageRef);
+
+    return previewURL;
 };

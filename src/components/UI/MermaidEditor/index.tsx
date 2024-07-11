@@ -7,7 +7,7 @@ import { doc, collection, updateDoc } from 'firebase/firestore';
 import { fireStore } from "@core/firebase/firebase";
 
 import { mermaidTemplate } from "@constants/constants";
-import { dataURItoBlob } from "@utils/funciton";
+import { dataURItoBlob, handleGetUrlPreview } from "@utils/funciton";
 
 import MonacoEditor from "../MonacoEditor";
 import MermaidChart from "../MermaidChart";
@@ -90,9 +90,16 @@ const MermaidEditor = (props: MermaidChartProps) => {
     };
 
     const handleUpdateCode = async (code: string) => {
+        let previewUrl: string = '';
+        if (state.autoSync) {
+            previewUrl = await handleGetUrlPreview(docId);
+            console.log("auto: ", previewUrl);
+        };
+
         const docRef = doc(collection(fireStore, 'documents'), docId);
         await updateDoc(docRef, {
             code: code,
+            previewImg: previewUrl,
         });
     };
 
@@ -214,6 +221,23 @@ const MermaidEditor = (props: MermaidChartProps) => {
     const handleSyncCode = () => {
         setState(prev => ({...prev, isSync: true}));
     };
+
+    useEffect(() => {
+        async function uploadPreviewImg() {
+            if (!state.autoSync && state.isSync) {
+                const previewUrl = await handleGetUrlPreview(docId);
+                console.log("sync: ", previewUrl);
+                
+                const docRef = doc(collection(fireStore, 'documents'), docId);
+                await updateDoc(docRef, {
+                    previewImg: previewUrl,
+                });
+            };
+        };
+
+        !state.isFirstTimeLoad && uploadPreviewImg();
+
+    },[state.isSync, state.autoSync, state.isFirstTimeLoad]);
 
     return (
         <div className="w-full h-full flex relative">
