@@ -40,6 +40,7 @@ const MonacoEditor = (props: MonacoEditorProps) => {
             });
 
             setTimeout(() => {
+                console.log('running 123');
                 monaco.editor.setTheme('mermaid');
                 initEditor(monaco);
             }, 100);
