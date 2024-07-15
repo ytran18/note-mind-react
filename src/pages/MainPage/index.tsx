@@ -77,7 +77,9 @@ const MainPage = () => {
                         <div className='w-full flex items-center justify-between'>
                             <div className=''>
                                 <div className='text-xl font-semibold'>{`Hello, ${user?.name}`}</div>
-                                <div className='text-sm opacity-65'>You have no file yet, upload one now!</div>
+                                {state.cards.length === 0 && (
+                                    <div className='text-sm opacity-65'>You have no note yet, create one now!</div>
+                                )}
                             </div>
                             <Button
                                 className='!bg-black !text-white !font-semibold'
