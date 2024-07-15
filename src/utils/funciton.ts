@@ -64,6 +64,31 @@ export const getUserDocuments = async (user: User) => {
     return documents;
 };
 
+export const fileterUserDocuments = async (user: User, filter: string) => {
+    if (filter === 'all') {
+        const data = await getUserDocuments(user);
+        return data;
+    };
+    
+    const userDocumentsRef = query(
+        collection(fireStore, 'documents'),
+        where('owner', '==', user?._id),
+        where('noteType', '==', filter),
+    );
+
+    let documents:any = [];
+
+    await getDocs(userDocumentsRef).then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            if (doc.data()) documents.push(doc.data());
+        });
+    });
+    
+    documents = documents.sort(compare);
+
+    return documents;
+};
+
 export const compare = (a: any, b: any) => {
     return b?.createdAt - a?.createdAt;
 };

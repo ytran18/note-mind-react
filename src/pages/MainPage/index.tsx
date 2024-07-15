@@ -1,10 +1,10 @@
 import { useNavigate } from 'react-router-dom';
-import React, { useEffect, useState } from 'react';
-import { Button } from 'antd';
+import { useEffect, useState } from 'react';
+import { Button, Select } from 'antd';
 import FileCard from '@components/UI/FileCard';
 import ModalCreateNote from '@components/UI/ModalCreateNote';
 
-import { getUserDocuments } from '@utils/funciton';
+import { getUserDocuments, fileterUserDocuments } from '@utils/funciton';
 import { Document } from '@utils/interface';
 
 import useAuth from '@hooks/useAuth';
@@ -19,6 +19,7 @@ interface DashboardStateTypes {
     confirmLoading: boolean;
     isModalCreateNote: boolean;
     cards: Document[];
+    filter: string;
 };
 
 const MainPage = () => {
@@ -29,6 +30,7 @@ const MainPage = () => {
         confirmLoading: false,
         isModalCreateNote: false,
         cards: [],
+        filter: 'all',
     });
 
     const user = useAuth().user;
@@ -62,6 +64,15 @@ const MainPage = () => {
         navigate(`/editor/${cardId}`);
     };
 
+    const handleFilter = async (value: string) => {
+        const documents = await fileterUserDocuments(user!, value);
+        setState(prev => ({
+            ...prev,
+            filter: value,
+            cards: documents,
+        }));
+    };
+
     return (
         <>
             {!userLoading && (
@@ -81,13 +92,27 @@ const MainPage = () => {
                                     <div className='text-sm opacity-65'>You have no note yet, create one now!</div>
                                 )}
                             </div>
-                            <Button
-                                className='!bg-black !text-white !font-semibold'
-                                onClick={handleModalCreateNote}
-                            >
-                                Create note
-                                <IconPlus />
-                            </Button>
+                            <div className='flex items-center gap-3'>
+                                <Select
+                                    value={state.filter}
+                                    style={{ width: 120 }}
+                                    className='!font-semibold'
+                                    onChange={handleFilter}
+                                    options={[
+                                        { value: 'all', label: 'All' },
+                                        { value: 'mermaid', label: 'Mermaid' },
+                                        { value: 'pdf', label: 'PDF' },
+                                        { value: 'note', label: 'Note' },
+                                    ]}
+                                />
+                                <Button
+                                    className='!bg-black !text-white !font-semibold'
+                                    onClick={handleModalCreateNote}
+                                >
+                                    Create note
+                                    <IconPlus />
+                                </Button>
+                            </div>
                         </div>
                         <div className='grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-3 gap-4 place-items-center pb-5'>
                             {state.cards.map((item) => {
