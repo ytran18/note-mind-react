@@ -58,6 +58,8 @@ const Editor = () => {
                         >
                             <PdfEditor
                                 doc={state.document}
+                                docId={state.document?._id}
+                                docNote={state.document?.note}
                             />
                         </div>
                     )}

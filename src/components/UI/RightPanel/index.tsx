@@ -1,3 +1,5 @@
+import { Block } from "@blocknote/core";
+
 import NoteSpace from "../NoteSpace";
 import ChatSpace from "../ChatSpace";
 import FlashCardSpace from "../FlashCardSpace";
@@ -14,15 +16,23 @@ const tabs = [
 
 interface RightPanelProps {
     tabActive: number;
+    docNote: Block[];
     handleChangeTab: (tab: number) => void;
+    handleUpdatePdfNote: (document: Block[]) => void;
 };
 
 const RightPanel = (props: RightPanelProps) => {
 
-    const { tabActive, handleChangeTab } = props;
+    const { tabActive, docNote } = props;
+    const { handleChangeTab, handleUpdatePdfNote } = props;
 
     const renderTab = {
-        0: <NoteSpace />,
+        0: (
+            <NoteSpace
+                docNote={docNote}
+                handleUpdatePdfNote={handleUpdatePdfNote}
+            />
+        ),
         1: <ChatSpace />,
         2: <FlashCardSpace />,
     }[tabActive];
