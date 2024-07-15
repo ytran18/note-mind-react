@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Popover } from 'antd';
 
@@ -8,6 +8,7 @@ import MermaidExportPopover from '../MermaidExportPopover';
 import MermaidSettingsPopover from '../MermaidSettingsPopover';
 
 import { getMermaidUrlDiagramHelp } from '@utils/funciton';
+import useWindowSize from '@hooks/useWindowSize';
 
 import IconExpand from '@icons/iconExpand.svg';
 import IconCollapse from '@icons/iconCollapse.svg';
@@ -45,6 +46,12 @@ const MermaidSidebar = (props: MermaidSidebarProps) => {
         isCollapase: false,
         tabActive: null,
     });
+    
+    const iw = useWindowSize().width;
+
+    useEffect(() => {
+        setState(prev => ({...prev, isCollapase: iw < 900 ? true : false}));
+    },[iw]);
 
     const menu = [
         { label: 'Collapse menu', icon: state.isCollapase ? <IconExpand /> : <IconCollapse />, key: 'collapse-menu' },
@@ -105,11 +112,10 @@ const MermaidSidebar = (props: MermaidSidebarProps) => {
         <div className="mermaid-sidebar h-full w-fit flex flex-col border border-[rgb(229,230,230)] rounded-tl-md rounded-bl-md p-2 gap-2 bg-[rgba(229,237,255,0.3)]">
             {menu.map((item, index) => {
                 return (
-                    <>
+                    <div key={item.key}>
                         {(item.key === 'collapse-menu' || item.key === 'help') ? (
                             <div
                                 className={`w-full flex flex-nowrap whitespace-nowrap p-2 gap-2 items-center cursor-pointer text-[#00237a] font-medium hover:bg-[rgb(204,218,255)] rounded-md transition-colors duration-200 ${(state.tabActive === index && index !== 0) ? 'bg-[rgb(47,66,235)] text-white' : ''}`}
-                                key={item.key}
                                 onClick={() => handleMenuClick(item.key, index)}
                             >
                                 <div className='flex h-5 w-5 gap-2 align-middle'>
@@ -133,7 +139,6 @@ const MermaidSidebar = (props: MermaidSidebarProps) => {
                             >
                                 <div
                                     className={`w-full flex flex-nowrap whitespace-nowrap p-2 gap-2 items-center cursor-pointer text-[#00237a] font-medium hover:bg-[rgb(204,218,255)] rounded-md transition-colors duration-200 ${state.tabActive === index ? 'bg-[rgb(47,66,235)] text-white' : ''}`}
-                                    key={item.key}
                                     id={`mermaid-sidebar-${item.key}`}
                                     onClick={() => handleMenuClick(item.key, index)}
                                 >
@@ -146,7 +151,7 @@ const MermaidSidebar = (props: MermaidSidebarProps) => {
                                 </div>
                             </Popover>
                         )}
-                    </>
+                    </div>
                 )
             })}
         </div>

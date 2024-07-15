@@ -256,7 +256,7 @@ const MermaidEditor = (props: MermaidChartProps) => {
             </div>
             <div className="h-full flex flex-grow gap-[3px]">
                 <ResizablePanelGroup autoSaveId="window-layout" direction="horizontal">
-                    <ResizablePanel defaultSize={50} minSize={25}>
+                    <ResizablePanel className="hidden me:block" defaultSize={50} minSize={25}>
                         <div id="monaco-editor" className="h-full flex items-center justify-center border border-[rgb(229,230,230)] rounded-tr-md rounded-br-md">
                             <MonacoEditor
                                 code={state.codeValue}
@@ -266,7 +266,7 @@ const MermaidEditor = (props: MermaidChartProps) => {
                             />
                         </div>
                     </ResizablePanel>
-                    <div className='group flex w-2 cursor-col-resize items-center justify-center rounded-md bg-gray-50'>
+                    <div className='group hidden me:flex w-2 cursor-col-resize items-center justify-center rounded-md bg-gray-50'>
                         <ResizableHandle className='h-1 w-24 rounded-full bg-neutral-400 duration-300 group-hover:bg-primaryb group-active:duration-75 lg:h-24 lg:w-1' />
                     </div>
                     <ResizablePanel defaultSize={50} minSize={25}>
