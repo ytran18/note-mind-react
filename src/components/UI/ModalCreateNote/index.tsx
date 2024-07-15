@@ -141,7 +141,19 @@ const ModalCreateNote = (props: ModalCreateNoteProps) => {
                         noteType: state.noteType,
                         createdAt: new Date().getTime(),
                         code: code || '',
-                        note: [],
+                        note: [
+                            {
+                                "content": [],
+                                "id": v4(),
+                                "type": "paragraph",
+                                "children": [],
+                                "props": {
+                                    "textColor": "default",
+                                    "textAlignment": "left",
+                                    "backgroundColor": "default"
+                                }
+                            }
+                        ],
                         pdfUrl: pdfUrl || '',
                         mermaidType: state.noteType === 'mermaid' ? state.selectedMermaidTemplate : '',
                         mermaidTheme: 'default',
