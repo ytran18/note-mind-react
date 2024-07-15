@@ -153,3 +153,11 @@ export const handleGetUrlPreview = async (noteId: string): Promise<string> => {
 
     return previewURL;
 };
+
+export const copyTextToClipboard = (text: string | undefined, callback: () => void) => {
+    if (text) {
+        navigator.clipboard.writeText(text);
+    };
+    
+    callback();
+};

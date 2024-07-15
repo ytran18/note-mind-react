@@ -1,5 +1,6 @@
 import { PdfHighlighter, PdfLoader } from 'react-pdf-highlighter';
 import { SpinnerPage } from '../Spinner';
+import TextSelectionPopover from '../TextSelectionPopover';
 
 import './style.scss';
 
@@ -24,11 +25,14 @@ const LeftPanel = (props: LeftPanelProps) => {
                             pdfDocument={pdfDocument}
                             enableAreaSelection={(event) => event.altKey}
                             onScrollChange={resetHash}
-                            scrollRef={(scrollTo) => {
-                            }}
+                            scrollRef={(scrollTo) => {}}
                             onSelectionFinished={(position, content, hideTipAndSelection, transformSelection) => {
                                 return (
-                                    <></>
+                                    <TextSelectionPopover
+                                        content={content}
+                                        position={position}
+                                        hideTipAndSelection={hideTipAndSelection}
+                                    />
                                 );
                             }}
                             highlightTransform={( highlight, index, setTip, hideTip, viewportToScaled, screenshot, isScrolledTo ) => {
