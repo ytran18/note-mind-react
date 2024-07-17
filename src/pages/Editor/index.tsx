@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { Block } from "@blocknote/core";
 
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, doc as firestoreDoc, collection, updateDoc } from 'firebase/firestore';
 import { fireStore } from "@core/firebase/firebase";
 
 import LoadingPage from "@components/Layout/LoadingPage";
 import PdfEditor from "@components/UI/PdfEditor";
 import MermaidEditor from "@components/UI/MermaidEditor";
+import NoteEditor from "@components/UI/NoteEditor";
 
 import IconArrowLeft from '@icons/iconArrowLeft.svg';
 
@@ -33,6 +35,13 @@ const Editor = () => {
             setState(prev => ({...prev, document: document}));
         });
     },[pathname.editorId]);
+
+    const handleUpdateNoteContent = async (document: Block[]) => {
+        const docRef = firestoreDoc(collection(fireStore, 'documents'), state.document?._id);
+        await updateDoc(docRef, {
+            note: document,
+        });
+    };
 
     const handleNavigateBack = () => {
         navigate('/mainpage');  
@@ -74,6 +83,17 @@ const Editor = () => {
                                 code={state.document?.code}
                                 mermaidType={state.document?.mermaidType}
                                 docId={state.document?._id}
+                            />
+                        </div>
+                    )}
+                    {state.document?.noteType === 'note' && (
+                        <div
+                            style={{height: 'calc(100% - 26px)'}}
+                            className="w-full"
+                        >
+                            <NoteEditor
+                                docNote={state.document?.note}
+                                handleUpdateNoteContent={handleUpdateNoteContent}
                             />
                         </div>
                     )}
