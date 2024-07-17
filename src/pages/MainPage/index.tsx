@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Button, Select } from 'antd';
 import FileCard from '@components/UI/FileCard';
 import ModalCreateNote from '@components/UI/ModalCreateNote';
+import SearchModal from '@components/UI/SearchModal';
 
 import { getUserDocuments, fileterUserDocuments } from '@utils/funciton';
 import { Document } from '@utils/interface';
@@ -20,6 +21,7 @@ interface DashboardStateTypes {
     isModalCreateNote: boolean;
     cards: Document[];
     filter: string;
+    isOpenSearchModal: boolean;
 };
 
 const MainPage = () => {
@@ -31,10 +33,12 @@ const MainPage = () => {
         isModalCreateNote: false,
         cards: [],
         filter: 'all',
+        isOpenSearchModal: false,
     });
 
     const user = useAuth().user;
     const userLoading = useAuth().loading;
+    const navigate = useNavigate();
 
     const getCards = async (user: any) => {
         const documents = await getUserDocuments(user!);
@@ -44,8 +48,25 @@ const MainPage = () => {
     useEffect(() => {
         !userLoading && getCards(user);
     },[userLoading]);
+
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.shiftKey && event.code === 'Space') {
+                event.preventDefault();
+                setState(prev => ({...prev, isOpenSearchModal: !prev.isOpenSearchModal}));
+            };
+        };
     
-    const navigate = useNavigate();
+        window.addEventListener('keydown', handleKeyDown);
+    
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, []);
+    
+    const onCancelSearchModal = () => {
+        setState(prev => ({...prev, isOpenSearchModal: false}));
+    };
 
     const handleModalCreateNote = () => {
         setState(prev => ({...prev, isModalCreateNote: !prev.isModalCreateNote}));
@@ -116,6 +137,7 @@ const MainPage = () => {
                                 </Button>
                             </div>
                         </div>
+                        <div className='text-xs font-medium'>* Press Shift + Space to search cards</div>
                         <div className='grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-3 gap-4 place-items-center pb-5'>
                             {state.cards.map((item) => {
                                 return (
@@ -136,6 +158,10 @@ const MainPage = () => {
                             open={state.isModalCreateNote}
                             onClose={handleModalCreateNote}
                             getCards={getCards}
+                        />
+                        <SearchModal
+                            open={state.isOpenSearchModal}
+                            onCancelSearchModal={onCancelSearchModal}
                         />
                     </div>
                 </div>
