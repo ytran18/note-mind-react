@@ -5,12 +5,14 @@ const NOTE_TYPE = [
     { label: 'PDF Editor', value: 'pdf' },
     { label: 'Mermaid Editor', value: 'mermaid' },
     { label: 'Basic Note', value: 'note' },
+    { label: 'Mindmap', value: 'mindmap' },
+    { label: 'SVG Editor', value: 'svg' },
 ];
 
 interface CreateNoteInfoProps {
-    noteType: 'pdf' | 'note' | 'mermaid';
+    noteType: 'pdf' | 'note' | 'mermaid' | 'mindmap' | 'svg';
     noteTitle: string;
-    onChange: (value: 'pdf' | 'note' | 'mermaid') => void;
+    onChange: (value: 'pdf' | 'note' | 'mermaid' | 'mindmap' | 'svg') => void;
     handleNoteTitleChange: (value: string) => void;
 };
 

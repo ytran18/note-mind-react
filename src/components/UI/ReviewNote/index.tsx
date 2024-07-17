@@ -18,7 +18,7 @@ import IconState from '@icons/mermaid/state.svg';
 import IconTimeline from '@icons/mermaid/timeline.svg';
 
 interface ReviewNoteProps {
-    noteType: 'pdf' | 'note' | 'mermaid';
+    noteType: 'pdf' | 'note' | 'mermaid' | 'mindmap' | 'svg';
     noteTitle: string;
     selectedMermaidTemplate: string;
     file: any[];
@@ -27,7 +27,9 @@ interface ReviewNoteProps {
 const tagsData = [
     {label: 'Basic Note', value: 'note'},
     {label: 'Mermaid Editor', value: 'mermaid'},
-    {label: 'PDF Editor', value: 'pdf'}
+    {label: 'PDF Editor', value: 'pdf'},
+    {label: 'Mindmap', value: 'mindmap'},
+    {label: 'SVG Editor', value: 'svg'},
 ];
 
 const ReviewNote = (props: ReviewNoteProps) => {

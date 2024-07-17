@@ -14,6 +14,8 @@ import IconCopy from '@icons/iconCopy.svg';
 import ImageEmptyDiagram from '@images/imageEmptyDiagram.png';
 import ImageNote from '@images/imageNote.png';
 import ImagePdf from '@images/imagePdf.png';
+import ImageSVG from '@images/imageSVG.png';
+import ImageMindmap from '@images/imageMindmap.png';
 
 import './style.scss';
 
@@ -97,6 +99,8 @@ const FileCard = (props: FileCardProps) => {
             'mermaid': previewImg.length === 0 ? ImageEmptyDiagram : previewImg,
             'pdf': previewImg.length === 0 ? ImagePdf : previewImg,
             'note': previewImg.length === 0 ? ImageNote : previewImg,
+            'svg': previewImg.length === 0 ? ImageSVG : previewImg,
+            'mindmap': previewImg.length === 0 ? ImageMindmap : previewImg,
         }[noteType];
 
         return img;
@@ -137,7 +141,7 @@ const FileCard = (props: FileCardProps) => {
                         <img
                             onClick={() => handleNavigateEditor(docId)}
                             alt="card-cover"
-                            className="w-[300px] h-[120px] object-contain"
+                            className={`w-[300px] h-[120px] object-contain ${noteType === 'svg' && 'scale-[0.6]'}`}
                             src={imgPreview()}
                         />
                     }

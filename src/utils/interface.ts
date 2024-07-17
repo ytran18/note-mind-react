@@ -13,7 +13,7 @@ export interface Document {
     pdfUrl?: string;
     title: string;
     owner: string;
-    noteType: 'note' | 'mermaid' | 'pdf';
+    noteType: 'note' | 'mermaid' | 'pdf' | 'mindmap' | 'svg';
     mermaidType?: string;
     createdAt: number;
     note?: any[];

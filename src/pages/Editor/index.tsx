@@ -9,6 +9,8 @@ import LoadingPage from "@components/Layout/LoadingPage";
 import PdfEditor from "@components/UI/PdfEditor";
 import MermaidEditor from "@components/UI/MermaidEditor";
 import NoteEditor from "@components/UI/NoteEditor";
+import MindmapEditor from "@components/UI/MindmapEditor";
+import SVGEditor from "@components/UI/SVGEditor";
 
 import IconArrowLeft from '@icons/iconArrowLeft.svg';
 
@@ -95,6 +97,22 @@ const Editor = () => {
                                 docNote={state.document?.note}
                                 handleUpdateNoteContent={handleUpdateNoteContent}
                             />
+                        </div>
+                    )}
+                    {state.document?.noteType === 'mindmap' && (
+                        <div
+                            style={{height: 'calc(100% - 26px)'}}
+                            className="w-full"
+                        >
+                            <MindmapEditor />
+                        </div>
+                    )}
+                    {state.document?.noteType === 'svg' && (
+                        <div
+                            style={{height: 'calc(100% - 26px)'}}
+                            className="w-full"
+                        >
+                            <SVGEditor />
                         </div>
                     )}
                 </>

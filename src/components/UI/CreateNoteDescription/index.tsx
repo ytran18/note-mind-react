@@ -2,7 +2,7 @@ import UploadFile from "../UploadFile";
 import SelectMermaidTemplate from "../SelectMermaidTemplate";
 
 interface CreateNoteDescriptionProps {
-    noteType: 'pdf' | 'mermaid' | 'note';
+    noteType: 'pdf' | 'mermaid' | 'note' | 'mindmap' | 'svg';
     selectedMermaidTemplate: string;
     handleUploadFile: (file: any) => void;
     handleSelectMermaidTemplate: (tag: string, checked: boolean) => void;

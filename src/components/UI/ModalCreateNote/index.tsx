@@ -23,7 +23,7 @@ interface ModalCreateNoteProps {
 };
 
 interface ModalCreateNoteState {
-    noteType: 'pdf' | 'note' | 'mermaid';
+    noteType: 'pdf' | 'note' | 'mermaid' | 'mindmap' | 'svg';
     noteTitle: string;
     currentStep: number;
     selectedMermaidTemplate: string;
@@ -44,7 +44,7 @@ const ModalCreateNote = (props: ModalCreateNoteProps) => {
 
     const user = useAuth();
 
-    const handleChangeNoteType = (value: 'pdf' | 'note' | 'mermaid') => {
+    const handleChangeNoteType = (value: 'pdf' | 'note' | 'mermaid' | 'mindmap' | 'svg') => {
         setState(prev => ({...prev, noteType: value}));
     };
 
@@ -84,7 +84,14 @@ const ModalCreateNote = (props: ModalCreateNoteProps) => {
                     if (!noteTitle) {
                         message.warning('Please enter your note title!');
                     } else {
-                        const nextStep = noteType !== 'note' ? 1 : 2;
+                        const isSecondStep = {
+                            'mermaid': 1,
+                            'pdf': 1,
+                            'note': 2,
+                            'mindmap': 2,
+                            'svg': 2,
+                        }[noteType];
+                        const nextStep = isSecondStep;
                         setState(prev => ({...prev, currentStep: nextStep}));
                     };
                 },
@@ -173,7 +180,14 @@ const ModalCreateNote = (props: ModalCreateNoteProps) => {
             prevButtonProps: {
                 onClick() {
                     const { noteType } = state;
-                    setState(prev => ({...prev, currentStep: noteType === 'note' ? 0 : 1}));
+                    const previousStep = {
+                        'mermaid': 1,
+                        'pdf': 1,
+                        'note': 0,
+                        'mindmap': 0,
+                        'svg': 0,
+                    }[noteType];
+                    setState(prev => ({...prev, currentStep: previousStep}));
                 },
             }
         },
