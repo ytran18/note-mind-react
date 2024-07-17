@@ -103,6 +103,8 @@ const MainPage = () => {
                                         { value: 'mermaid', label: 'Mermaid' },
                                         { value: 'pdf', label: 'PDF' },
                                         { value: 'note', label: 'Note' },
+                                        { value: 'mindmap', label: 'Mindmap' },
+                                        { value: 'svg', label: 'SVG' },
                                     ]}
                                 />
                                 <Button
