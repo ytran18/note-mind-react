@@ -96,7 +96,7 @@ const MermaidChart = forwardRef<HTMLDivElement, MermaidChartProps>((props: Merma
                             {(!autoSync && !isSync) && (
                                 <div className='container absolute left-1/2 -translate-x-1/2 z-10 my-8 w-[70%] space-y-4 rounded-lg border bg-white bg-opacity-80 p-4 text-center text-[#00237a]'>
                                     <p data-testid="out-of-sync-message">Your diagram is out of sync.</p>
-                                    <p className="text-center">When you're ready to sync your diagram, click on the Sync diagram button from the "More options" panel, or press on the&nbsp;Command ⌘ + Return ⏎ keys from within the text editor.</p>
+                                    <p className="text-center">When you're ready to sync your diagram, click on the Sync diagram button from the "More options" panel, or press on the&nbsp;Command ⌘ / Ctrl + Return ⏎ keys from within the text editor.</p>
                                 </div>
                             )}
                             <div className='absolute w-[100px] h-[35px] flex justify-between px-[5px] right-[15px] bottom-[15px] bg-[rgb(67,153,225)] rounded z-[100]'>
