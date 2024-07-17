@@ -4,6 +4,7 @@ import AppRoutes from './routes';
 
 import DefaultLayout from '@components/Layout/DefaultLayout';
 import ProtectedRoute from '@lib/ProtectedRoute';
+import NotFoundPage from '@components/Layout/NotFoundPage';
 
 function App() {
     return (
@@ -32,6 +33,10 @@ function App() {
                         )
                     })
                 }
+                <Route
+                    path='*'
+                    element={<NotFoundPage />}
+                />
             </Routes>
         </BrowserRouter>
     );
