@@ -137,7 +137,7 @@ const MainPage = () => {
                                 </Button>
                             </div>
                         </div>
-                        <div className='text-xs font-medium'>* Press Shift + Space to search cards</div>
+                        <div className='text-xs font-medium'>* Press Shift + Space to search your cards</div>
                         <div className='grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-3 gap-4 place-items-center pb-5'>
                             {state.cards.map((item) => {
                                 return (
