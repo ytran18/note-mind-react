@@ -1,13 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "../Resizable";
 import SVGCodeEditor from "../SVGCodeEditor";
 import SVGPreview from "../SVGPreview";
 
+import { svgRotate } from "@constants/constants";
+
 interface SVGEditorState {
     previewBg: '#F7F8F9' | 'transparent' | '#FFFFFF' | '#161B1D';
     svgCode: string | undefined;
     dimensions: string | null;
+    rotate: number;
+    isFlipY: boolean;
+    isFlipX: boolean;
 };
 
 const SVGEditor = () => {
@@ -16,6 +21,9 @@ const SVGEditor = () => {
         previewBg: 'transparent',
         svgCode: '',
         dimensions: '',
+        rotate: 0,
+        isFlipX: false,
+        isFlipY: false,
     });
 
     const handleChangeBg = (bg: '#F7F8F9' | 'transparent' | '#FFFFFF' | '#161B1D') => {
@@ -31,7 +39,33 @@ const SVGEditor = () => {
     };
 
     const handleRotate = () => {
+        const { svgCode, rotate, isFlipX, isFlipY } = state;
+        if (!svgCode) return;
 
+        const parser = new DOMParser();
+        const svgDoc = parser.parseFromString(svgCode, 'image/svg+xml');
+        const svgElement = svgDoc.getElementsByTagName('svg')[0];
+
+        if (svgElement) {
+            const isRotate = svgElement.getAttribute('transform');
+            if (isRotate !== null) {
+                const nextStep = rotate + 1 > 3 ? 0 : rotate + 1;
+                if (nextStep === 0 && !isFlipX && !isFlipY) {
+                    svgElement.removeAttribute('transform');
+                } else {
+                    const nextRotate = svgRotate(nextStep, isFlipX, isFlipY);
+                    svgElement.setAttribute('transform', nextRotate!);
+                };
+            } else {
+                svgElement.setAttribute('transform', 'matrix(6.123233995736766e-17,1,-1,6.123233995736766e-17,0,0)')
+            };
+
+            const serializer = new XMLSerializer();
+            const modifiedSVGString = serializer.serializeToString(svgElement);
+            const nextRotate = rotate + 1 > 3 ? 0 : rotate + 1;
+
+            setState(prev => ({...prev, svgCode: modifiedSVGString, rotate: nextRotate}));
+        };
     };
 
     const handleFlipY = () => {
@@ -41,14 +75,21 @@ const SVGEditor = () => {
         const parser = new DOMParser();
         const svgDoc = parser.parseFromString(svgCode, 'image/svg+xml');
         const svgElement = svgDoc.getElementsByTagName('svg')[0];
+        let isFlipY: boolean = true;
 
         if (svgElement) {
             const isFlip = svgElement.getAttribute('transform');
             if (isFlip !== null) {
                 const arrValue = isFlip.replace(/^matrix\(|\)$/g, '').split(',').map(Number);
-                arrValue[3] = -arrValue[3];
-                const result = `matrix(${arrValue.join(',')})`;
-                svgElement.setAttribute('transform', result);
+                if (arrValue[0] === 1 && arrValue[3] === -1) {
+                    svgElement.removeAttribute('transform');
+                    isFlipY = false;
+                } else {
+                    arrValue[3] = -arrValue[3];
+                    if (arrValue[3] === 1) isFlipY = false;
+                    const result = `matrix(${arrValue.join(',')})`;
+                    svgElement.setAttribute('transform', result);
+                }
             } else {
                 svgElement.setAttribute('transform', 'matrix(1,0,0,-1,0,0)')
             };
@@ -56,7 +97,7 @@ const SVGEditor = () => {
             const serializer = new XMLSerializer();
             const modifiedSVGString = serializer.serializeToString(svgElement);
 
-            setState(prev => ({...prev, svgCode: modifiedSVGString}));
+            setState(prev => ({...prev, svgCode: modifiedSVGString, isFlipY: isFlipY}));
         };
     };
 
@@ -67,22 +108,29 @@ const SVGEditor = () => {
         const parser = new DOMParser();
         const svgDoc = parser.parseFromString(svgCode, 'image/svg+xml');
         const svgElement = svgDoc.getElementsByTagName('svg')[0];
+        let isFlipX: boolean = true;
 
         if (svgElement) {
             const isFlip = svgElement.getAttribute('transform');
             if (isFlip !== null) {
                 const arrValue = isFlip.replace(/^matrix\(|\)$/g, '').split(',').map(Number);
-                arrValue[0] = -arrValue[0];
-                const result = `matrix(${arrValue.join(',')})`;
-                svgElement.setAttribute('transform', result);
+                if (arrValue[3] === 1 && arrValue[0] === -1) {
+                    svgElement.removeAttribute('transform');
+                    isFlipX = false;
+                } else {
+                    arrValue[0] = -arrValue[0];
+                    if (arrValue[0] === 1) isFlipX = false;
+                    const result = `matrix(${arrValue.join(',')})`;
+                    svgElement.setAttribute('transform', result);
+                }
             } else {
-                svgElement.setAttribute('transform', 'matrix(-1,0,0,1,0,0)')
+                svgElement.setAttribute('transform', 'matrix(-1,0,0,1,0,0)');
             };
 
             const serializer = new XMLSerializer();
             const modifiedSVGString = serializer.serializeToString(svgElement);
 
-            setState(prev => ({...prev, svgCode: modifiedSVGString}));
+            setState(prev => ({...prev, svgCode: modifiedSVGString, isFlipX: isFlipX}));
         };
     };
 
