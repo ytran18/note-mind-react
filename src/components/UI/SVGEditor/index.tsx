@@ -6,16 +6,22 @@ import SVGPreview from "../SVGPreview";
 
 interface SVGEditorState {
     previewBg: '#F7F8F9' | 'transparent' | '#FFFFFF' | '#161B1D';
+    svgCode: string | undefined;
 };
 
 const SVGEditor = () => {
 
     const [state, setState] = useState<SVGEditorState>({
         previewBg: 'transparent',
+        svgCode: ''
     });
 
     const handleChangeBg = (bg: '#F7F8F9' | 'transparent' | '#FFFFFF' | '#161B1D') => {
         setState(prev => ({...prev, previewBg: bg}))
+    };
+
+    const handleChangeSVGCode = (value: string | undefined) => {
+        setState(prev => ({...prev, svgCode: value}));
     };
 
     return (
@@ -23,7 +29,10 @@ const SVGEditor = () => {
             <ResizablePanelGroup autoSaveId="window-layout" direction="horizontal">
                 <ResizablePanel defaultSize={50} minSize={30}>
                     <div className="h-full flex items-center justify-center border border-[rgb(229,230,230)] rounded-md">
-                        <SVGCodeEditor />
+                        <SVGCodeEditor
+                            handleChangeSVGCode={handleChangeSVGCode}
+                            svgCode={state.svgCode}
+                        />
                     </div>
                 </ResizablePanel>
                 <div className='group flex w-2 cursor-col-resize items-center justify-center rounded-md bg-gray-50'>
@@ -33,6 +42,7 @@ const SVGEditor = () => {
                     <div className='flex h-full justify-center items-center border rounded-md border-[rgb(229,230,230)]'>
                         <SVGPreview
                             previewBg={state.previewBg}
+                            svgCode={state.svgCode}
                             handleChangeBg={handleChangeBg}
                         />
                     </div>

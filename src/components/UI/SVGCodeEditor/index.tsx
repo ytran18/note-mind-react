@@ -33,7 +33,15 @@ interface SVGCodeEditorState {
     selectedTags: string[];
 }
 
-const SVGCodeEditor = () => {
+interface SVGCodeEditorProps {
+    svgCode: string | undefined;
+    handleChangeSVGCode: (value: string | undefined) => void;
+}
+
+const SVGCodeEditor = (props: SVGCodeEditorProps) => {
+
+    const { svgCode } = props;
+    const { handleChangeSVGCode } = props;
 
     const [state, setState] = useState<SVGCodeEditorState>({
         selectedTags: [],
@@ -81,6 +89,8 @@ const SVGCodeEditor = () => {
                     defaultLanguage="html"
                     className="w-full h-full py-[5px]"
                     options={options}
+                    value={svgCode}
+                    onChange={handleChangeSVGCode}
                 />
             </div>
             <div className="h-[64px] w-full flex items-center justify-between px-9 border-t border-[#e3e5e8]">

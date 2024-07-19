@@ -1,14 +1,16 @@
-import { Tag, Flex, Button } from "antd";
+import { Tag, Flex, Button, Result } from "antd";
 
 import IconDownload from '@icons/iconDownloadSVG.svg';
 import IconMinus from '@icons/iconMinus.svg';
 import IconPlus from '@icons/iconPlus.svg';
 import IconBgTransparent from '@icons/iconBgTransparent.svg';
+import IconNoSVG from '@icons/iconNoSVG.svg';
 
 import ImageBgTransparent from '@images/imageBgTransparent.png';
 
 interface SVGPreviewProps {
     previewBg: '#F7F8F9' | 'transparent' | '#FFFFFF' | '#161B1D';
+    svgCode: string | undefined;
     handleChangeBg: (bg: '#F7F8F9' | 'transparent' | '#FFFFFF' | '#161B1D') => void;
 }
 
@@ -17,7 +19,7 @@ const classNameBg = 'flex justify-around items-center w-[26px] h-[26px] box-bord
 
 const SVGPreview = (props: SVGPreviewProps) => {
 
-    const { previewBg } = props;
+    const { previewBg, svgCode } = props;
     const { handleChangeBg } = props;
 
     const listBg: ('#F7F8F9' | 'transparent' | '#FFFFFF' | '#161B1D')[] = ['#F7F8F9', '#FFFFFF', '#161B1D', 'transparent'];
@@ -40,12 +42,19 @@ const SVGPreview = (props: SVGPreviewProps) => {
                 </Flex>
             </div>
             <div
-                className="flex flex-grow w-full"
+                className="flex flex-grow w-full items-center justify-center"
                 style={{
-                    backgroundColor: previewBg !== 'transparent' ? previewBg : '',
-                    backgroundImage: previewBg === 'transparent' ? `url(${ImageBgTransparent})` : '',
+                    backgroundColor: svgCode?.length === 0 ? '#F7F8F9' : previewBg !== 'transparent' ? previewBg : '',
+                    backgroundImage: svgCode?.length === 0 ? '' : previewBg === 'transparent' ? `url(${ImageBgTransparent})` : '',
                 }}
             >
+                {svgCode?.length === 0 && (
+                    <Result
+                        icon={<IconNoSVG />}
+                        title='SVG Empty'
+                        subTitle='Please enter an SVG on the left'
+                    />
+                )}
             </div>
             <div className="w-full h-[64px] flex items-center justify-between p-3 border-t border-[#e3e5e8]">
                 <div className="flex items-center gap-5">
