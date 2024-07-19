@@ -30,6 +30,32 @@ const SVGEditor = () => {
         setState(prev => ({...prev, dimensions: value}));
     };
 
+    const handleRotate = () => {
+
+    };
+
+    const handleFlipY = () => {
+
+    };
+
+    const handleFlipX = () => {
+        const { svgCode } = state;
+        if (!svgCode) return;
+
+        const parser = new DOMParser();
+        const svgDoc = parser.parseFromString(svgCode, 'image/svg+xml');
+        const svgElement = svgDoc.getElementsByTagName('svg')[0];
+
+        if (svgElement) {
+            const isFlip = svgElement.getAttribute('transform');
+            isFlip !== null ? svgElement.removeAttribute('transform') : svgElement.setAttribute('transform', 'matrix(-1,0,0,1,0,0)')
+            const serializer = new XMLSerializer();
+            const modifiedSVGString = serializer.serializeToString(svgElement);
+
+            setState(prev => ({...prev, svgCode: modifiedSVGString}));
+        };
+    };
+
     return (
         <div className="w-full h-full flex items-center justify-center">
             <ResizablePanelGroup autoSaveId="window-layout" direction="horizontal">
@@ -40,6 +66,9 @@ const SVGEditor = () => {
                             dimensions={state.dimensions}
                             handleChangeSVGCode={handleChangeSVGCode}
                             handleChangeDimensions={handleChangeDimensions}
+                            handleRotate={handleRotate}
+                            handleFlipY={handleFlipY}
+                            handleFlipX={handleFlipX}
                         />
                     </div>
                 </ResizablePanel>

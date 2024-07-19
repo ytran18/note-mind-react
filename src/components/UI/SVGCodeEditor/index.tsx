@@ -40,21 +40,24 @@ interface SVGCodeEditorProps {
     dimensions: string | null;
     handleChangeSVGCode: (value: string | undefined) => void;
     handleChangeDimensions: (value: string | null) => void;
+    handleRotate: () => void;
+    handleFlipY: () => void;
+    handleFlipX: () => void;
 }
 
 const SVGCodeEditor = (props: SVGCodeEditorProps) => {
 
     const { svgCode, dimensions } = props;
-    const { handleChangeSVGCode, handleChangeDimensions } = props;
+    const { handleChangeSVGCode, handleChangeDimensions, handleRotate, handleFlipY, handleFlipX } = props;
 
     const [state, setState] = useState<SVGCodeEditorState>({
         selectedTags: [],
     });
 
     const editorTop = [
-        { key: 'svg-rotate', icon: <IconRotate /> },
-        { key: 'svg-flipy', icon: <IconFlipY /> },
-        { key: 'svg-flipx', icon: <IconFlipX /> },
+        { key: 'svg-rotate', icon: <IconRotate />, func: () => handleRotate() },
+        { key: 'svg-flipy', icon: <IconFlipY />, func: () => handleFlipY() },
+        { key: 'svg-flipx', icon: <IconFlipX />, func: () => handleFlipX() },
         { key: 'svg-dimensions', icon: <IconDimensions /> },
     ];
 
@@ -104,6 +107,7 @@ const SVGCodeEditor = (props: SVGCodeEditorProps) => {
                                     <div
                                         key={item.key}
                                         className="w-8 h-8 flex items-center justify-center cursor-pointer hover:bg-[#f1f2f4] rounded transition-colors duration-200"
+                                        onClick={item.func}
                                     >
                                         {item.icon}
                                     </div>
