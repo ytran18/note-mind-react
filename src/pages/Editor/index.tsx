@@ -112,7 +112,9 @@ const Editor = () => {
                             style={{height: 'calc(100% - 26px)'}}
                             className="w-full"
                         >
-                            <SVGEditor />
+                            <SVGEditor
+                                title={state.document?.title}
+                            />
                         </div>
                     )}
                 </>

@@ -43,12 +43,14 @@ interface SVGCodeEditorProps {
     handleRotate: () => void;
     handleFlipY: () => void;
     handleFlipX: () => void;
+    handleCopySVG: () => void;
+    handleDownloadSVG: () => void;
 }
 
 const SVGCodeEditor = (props: SVGCodeEditorProps) => {
 
     const { svgCode, dimensions } = props;
-    const { handleChangeSVGCode, handleChangeDimensions, handleRotate, handleFlipY, handleFlipX } = props;
+    const { handleChangeSVGCode, handleChangeDimensions, handleRotate, handleFlipY, handleFlipX, handleCopySVG, handleDownloadSVG } = props;
 
     const [state, setState] = useState<SVGCodeEditorState>({
         selectedTags: [],
@@ -151,12 +153,14 @@ const SVGCodeEditor = (props: SVGCodeEditorProps) => {
                     <Button
                         icon={<IconCopy />}
                         className="font-medium"
+                        onClick={handleCopySVG}
                     >
                         Copy
                     </Button>
                     <Button
                         icon={<IconDownload />}
                         className="font-medium"
+                        onClick={handleDownloadSVG}
                     >
                         Download
                     </Button>

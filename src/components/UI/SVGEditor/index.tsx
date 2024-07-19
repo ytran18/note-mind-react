@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { message } from "antd";
 
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "../Resizable";
 import SVGCodeEditor from "../SVGCodeEditor";
@@ -15,7 +16,13 @@ interface SVGEditorState {
     isFlipX: boolean;
 };
 
-const SVGEditor = () => {
+interface SVGCodeEditorProps {
+    title: string;
+}
+
+const SVGEditor = (props: SVGCodeEditorProps) => {
+
+    const { title } = props;
 
     const [state, setState] = useState<SVGEditorState>({
         previewBg: 'transparent',
@@ -134,6 +141,37 @@ const SVGEditor = () => {
         };
     };
 
+    const handleCopySVG = () => {
+        const { svgCode } = state;
+        if (!svgCode) return;
+        try {
+            navigator.clipboard.writeText(svgCode);
+            message.success('Copied to clipboard')
+        } catch (error) {
+            console.log({error});
+            message.error('Failed to copy to clipboard!')
+        };
+    };
+
+    const handleDownloadSVG = () => {
+        const { svgCode } = state;
+        if (!svgCode) return;
+
+        try {
+            const svgBlob = new Blob([svgCode], { type: 'image/svg+xml' });
+            const url = URL.createObjectURL(svgBlob);
+    
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${title}.svg`;
+            document.body.appendChild(a);
+            a.click();
+            URL.revokeObjectURL(url);
+        } catch (error) {
+            message.error('Something went wrong!')            
+        };
+    };
+
     return (
         <div className="w-full h-full flex items-center justify-center">
             <ResizablePanelGroup autoSaveId="window-layout" direction="horizontal">
@@ -147,6 +185,8 @@ const SVGEditor = () => {
                             handleRotate={handleRotate}
                             handleFlipY={handleFlipY}
                             handleFlipX={handleFlipX}
+                            handleCopySVG={handleCopySVG}
+                            handleDownloadSVG={handleDownloadSVG}
                         />
                     </div>
                 </ResizablePanel>
