@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { message } from "antd";
 
+import { doc, collection, updateDoc } from 'firebase/firestore';
+import { fireStore } from "@core/firebase/firebase";
+
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "../Resizable";
 import SVGCodeEditor from "../SVGCodeEditor";
 import SVGPreview from "../SVGPreview";
@@ -14,15 +17,18 @@ interface SVGEditorState {
     rotate: number;
     isFlipY: boolean;
     isFlipX: boolean;
+    isFirstTimeLoad: boolean;
 };
 
 interface SVGCodeEditorProps {
     title: string;
+    docId: string;
+    code: string;
 }
 
 const SVGEditor = (props: SVGCodeEditorProps) => {
 
-    const { title } = props;
+    const { title, docId, code } = props;
 
     const [state, setState] = useState<SVGEditorState>({
         previewBg: 'transparent',
@@ -31,15 +37,38 @@ const SVGEditor = (props: SVGCodeEditorProps) => {
         rotate: 0,
         isFlipX: false,
         isFlipY: false,
+        isFirstTimeLoad: true,
     });
+
+    useEffect(() => {
+        if (code) setState(prev => ({...prev, svgCode: code}));
+    },[]);
 
     const handleChangeBg = (bg: '#F7F8F9' | 'transparent' | '#FFFFFF' | '#161B1D') => {
         setState(prev => ({...prev, previewBg: bg}))
     };
 
     const handleChangeSVGCode = (value: string | undefined) => {
-        setState(prev => ({...prev, svgCode: value}));
+        setState(prev => ({...prev, svgCode: value, isFirstTimeLoad: false}));
     };
+
+    const handleUpdateCode = async (code: string) => {
+        const docRef = doc(collection(fireStore, 'documents'), docId);
+        await updateDoc(docRef, {
+            code: code,
+        });
+    };
+
+    useEffect(() => {
+        const { svgCode, isFirstTimeLoad } = state;
+        if (isFirstTimeLoad) return;
+
+        const searchTimeout = setTimeout(() => {
+            if (svgCode) handleUpdateCode(svgCode);
+        }, 1000);
+
+        return () => clearTimeout(searchTimeout);
+    },[state.svgCode]);
 
     const handleChangeDimensions = (value: string | null) => {
         setState(prev => ({...prev, dimensions: value}));
@@ -200,6 +229,7 @@ const SVGEditor = (props: SVGCodeEditorProps) => {
                             svgCode={state.svgCode}
                             dimensions={state.dimensions}
                             handleChangeBg={handleChangeBg}
+                            handleDownloadSVG={handleDownloadSVG}
                         />
                     </div>
                 </ResizablePanel>

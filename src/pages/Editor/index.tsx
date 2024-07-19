@@ -114,6 +114,8 @@ const Editor = () => {
                         >
                             <SVGEditor
                                 title={state.document?.title}
+                                docId={state.document?._id}
+                                code={state.document?.code}
                             />
                         </div>
                     )}

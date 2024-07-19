@@ -13,6 +13,7 @@ interface SVGPreviewProps {
     svgCode: string | undefined;
     dimensions: string | null;
     handleChangeBg: (bg: '#F7F8F9' | 'transparent' | '#FFFFFF' | '#161B1D') => void;
+    handleDownloadSVG: () => void;
 }
 
 const tagsData = ['Preview', 'React', 'React Native', 'PNG', 'Data URI'];
@@ -21,7 +22,7 @@ const classNameBg = 'flex justify-around items-center w-[26px] h-[26px] box-bord
 const SVGPreview = (props: SVGPreviewProps) => {
 
     const { previewBg, svgCode, dimensions } = props;
-    const { handleChangeBg } = props;
+    const { handleChangeBg, handleDownloadSVG } = props;
 
     const listBg: ('#F7F8F9' | 'transparent' | '#FFFFFF' | '#161B1D')[] = ['#F7F8F9', '#FFFFFF', '#161B1D', 'transparent'];
 
@@ -96,6 +97,7 @@ const SVGPreview = (props: SVGPreviewProps) => {
                     <Button
                         className="font-medium"
                         icon={<IconDownload />}
+                        onClick={handleDownloadSVG}
                     >
                         Download
                     </Button>
