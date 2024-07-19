@@ -11,6 +11,7 @@ import ImageBgTransparent from '@images/imageBgTransparent.png';
 interface SVGPreviewProps {
     previewBg: '#F7F8F9' | 'transparent' | '#FFFFFF' | '#161B1D';
     svgCode: string | undefined;
+    dimensions: string | null;
     handleChangeBg: (bg: '#F7F8F9' | 'transparent' | '#FFFFFF' | '#161B1D') => void;
 }
 
@@ -19,7 +20,7 @@ const classNameBg = 'flex justify-around items-center w-[26px] h-[26px] box-bord
 
 const SVGPreview = (props: SVGPreviewProps) => {
 
-    const { previewBg, svgCode } = props;
+    const { previewBg, svgCode, dimensions } = props;
     const { handleChangeBg } = props;
 
     const listBg: ('#F7F8F9' | 'transparent' | '#FFFFFF' | '#161B1D')[] = ['#F7F8F9', '#FFFFFF', '#161B1D', 'transparent'];
@@ -48,6 +49,16 @@ const SVGPreview = (props: SVGPreviewProps) => {
                     backgroundImage: svgCode?.length === 0 ? '' : previewBg === 'transparent' ? `url(${ImageBgTransparent})` : '',
                 }}
             >
+                {svgCode?.length !== 0 && (
+                    <div
+                        style={{
+                            width: (dimensions !== null) ? `${dimensions}px` : '500px',
+                            height: (dimensions !== null) ? `${dimensions}px` : '500px',
+                        }}
+                        className="w-[500px] h-[500px] flex items-center justify-center cursor-grab"
+                        dangerouslySetInnerHTML={{__html: svgCode || ''}}
+                    />
+                )}
                 {svgCode?.length === 0 && (
                     <Result
                         icon={<IconNoSVG />}

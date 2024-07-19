@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Editor as MonacoEditor } from "@monaco-editor/react";
-import { Tag, Button } from "antd";
+import { Tag, Button, Popover, InputNumber } from "antd";
 
 import IconRotate from '@icons/iconRotate.svg';
 import IconFlipY from '@icons/iconFlipY.svg';
@@ -11,6 +11,8 @@ import IconUpload from '@icons/iconUpload.svg';
 import IconCopy from '@icons/iconCopySVG.svg';
 import IconDownload from '@icons/iconDownloadSVG.svg';
 import IconShare from '@icons/iconShare.svg';
+
+import './style.scss';
 
 const options = {
     readOnly: false,
@@ -35,13 +37,15 @@ interface SVGCodeEditorState {
 
 interface SVGCodeEditorProps {
     svgCode: string | undefined;
+    dimensions: string | null;
     handleChangeSVGCode: (value: string | undefined) => void;
+    handleChangeDimensions: (value: string | null) => void;
 }
 
 const SVGCodeEditor = (props: SVGCodeEditorProps) => {
 
-    const { svgCode } = props;
-    const { handleChangeSVGCode } = props;
+    const { svgCode, dimensions } = props;
+    const { handleChangeSVGCode, handleChangeDimensions } = props;
 
     const [state, setState] = useState<SVGCodeEditorState>({
         selectedTags: [],
@@ -60,16 +64,55 @@ const SVGCodeEditor = (props: SVGCodeEditorProps) => {
                 <div className="flex items-center">
                     {editorTop.map((item) => {
                         return (
-                            <div
-                                key={item.key}
-                                className="w-8 h-8 flex items-center justify-center cursor-pointer"
-                            >
-                                {item.icon}
-                            </div>
+                            <>
+                                {item.key === 'svg-dimensions' ? (
+                                    <Popover
+                                        placement="bottomLeft"
+                                        trigger={"click"}
+                                        arrow={false}
+                                        title="DIMENSIONS"
+                                        content={
+                                            <div className="flex items-center gap-3 text-sm">
+                                                <InputNumber
+                                                    prefix='W'
+                                                    rootClassName="input-dimensions"
+                                                    className="font-medium"
+                                                    value={dimensions}
+                                                    onChange={handleChangeDimensions}
+                                                />
+                                                <InputNumber
+                                                    prefix='H'
+                                                    rootClassName="input-dimensions"
+                                                    className="font-medium"
+                                                    value={dimensions}
+                                                    onChange={handleChangeDimensions}
+                                                />
+                                            </div>
+                                        }
+                                    >
+                                        <div
+                                            key={item.key}
+                                            className="h-8 w-fit min-w-8 flex items-center justify-center cursor-pointer hover:bg-[#f1f2f4] rounded transition-colors duration-200 px-1"
+                                        >
+                                            {item.icon}
+                                            {Number(dimensions) > 0 && (
+                                                <span className="text-sm ml-2 font-medium">{`${dimensions}px x ${dimensions}px`}</span>
+                                            )}
+                                        </div>
+                                    </Popover>
+                                ) : (
+                                    <div
+                                        key={item.key}
+                                        className="w-8 h-8 flex items-center justify-center cursor-pointer hover:bg-[#f1f2f4] rounded transition-colors duration-200"
+                                    >
+                                        {item.icon}
+                                    </div>
+                                )}
+                            </>
                         )
                     })}
                 </div>
-                <div className="flex items-center">
+                <div className="flex items-center select-none">
                     {tagsData.map<React.ReactNode>((tag) => (
                         <Tag.CheckableTag
                             key={tag}
