@@ -1,4 +1,5 @@
 import { Tag, Flex, Button, Result } from "antd";
+import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
 
 import IconDownload from '@icons/iconDownloadSVG.svg';
 import IconMinus from '@icons/iconMinus.svg';
@@ -51,14 +52,24 @@ const SVGPreview = (props: SVGPreviewProps) => {
                 }}
             >
                 {svgCode?.length !== 0 && (
-                    <div
-                        style={{
-                            width: (dimensions !== null) ? `${dimensions}px` : '500px',
-                            height: (dimensions !== null) ? `${dimensions}px` : '500px',
-                        }}
-                        className="w-[500px] h-[500px] flex items-center justify-center cursor-grab"
-                        dangerouslySetInnerHTML={{__html: svgCode || ''}}
-                    />
+                    <TransformWrapper minScale={0.5}>
+                        {
+                            ({ zoomIn, zoomOut, resetTransform, ...rest }) => (
+                                <>
+                                    <TransformComponent>
+                                        <div
+                                            style={{
+                                                width: (dimensions !== null) ? `${dimensions}px` : '500px',
+                                                height: (dimensions !== null) ? `${dimensions}px` : '500px',
+                                            }}
+                                            className="w-[500px] h-[500px] flex items-center justify-center cursor-grab"
+                                            dangerouslySetInnerHTML={{__html: svgCode || ''}}
+                                        />
+                                    </TransformComponent>
+                                </>
+                            )
+                        }
+                    </TransformWrapper>
                 )}
                 {svgCode?.length === 0 && (
                     <Result

@@ -88,7 +88,7 @@ const MermaidChart = forwardRef<HTMLDivElement, MermaidChartProps>((props: Merma
     },[state.errMessage]);
 
     return (
-        <div className='w-full h-full relative'>
+        <div className='w-full h-full relative mermaid-chart'>
             <TransformWrapper minScale={0.5}>
                 {
                     ({ zoomIn, zoomOut, resetTransform, ...rest }) => (
