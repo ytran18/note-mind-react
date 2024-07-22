@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { message } from "antd";
+import { transform } from '@svgr/core'
 
 import { doc, collection, updateDoc } from 'firebase/firestore';
 import { fireStore } from "@core/firebase/firebase";
@@ -9,6 +10,7 @@ import SVGCodeEditor from "../SVGCodeEditor";
 import SVGPreview from "../SVGPreview";
 
 import { svgRotate } from "@constants/constants";
+import { svgr, convertSvgToPng } from "@utils/funciton";
 
 interface SVGEditorState {
     previewBg: '#F7F8F9' | 'transparent' | '#FFFFFF' | '#161B1D';
@@ -18,6 +20,8 @@ interface SVGEditorState {
     isFlipY: boolean;
     isFlipX: boolean;
     isFirstTimeLoad: boolean;
+    transformSVGCode: string;
+    transformTab: string;
 };
 
 interface SVGCodeEditorProps {
@@ -38,6 +42,8 @@ const SVGEditor = (props: SVGCodeEditorProps) => {
         isFlipX: false,
         isFlipY: false,
         isFirstTimeLoad: true,
+        transformSVGCode: '',
+        transformTab: 'Preview',
     });
 
     useEffect(() => {
@@ -201,6 +207,27 @@ const SVGEditor = (props: SVGCodeEditorProps) => {
         };
     };
 
+    const handleChangeTransformTab = async (tag: string, checked: boolean) => {
+        if (!checked) return;
+        const { svgCode } = state;
+        if (!svgCode) return;
+
+        try {
+            let output: any;
+            if (tag === 'React' || tag === 'React Native') {
+                output = tag === 'React' ? await svgr(svgCode) : await svgr(svgCode, {native: true});
+            };
+    
+            if (tag === 'PNG' || tag === 'Data URI') {
+                output = await convertSvgToPng(svgCode);
+            };
+            
+            setState(prev => ({...prev, transformTab: tag, transformSVGCode: output}));
+        } catch (error) {
+            console.log({error});
+        }
+    };
+
     return (
         <div className="w-full h-full flex items-center justify-center">
             <ResizablePanelGroup autoSaveId="window-layout" direction="horizontal">
@@ -228,8 +255,11 @@ const SVGEditor = (props: SVGCodeEditorProps) => {
                             previewBg={state.previewBg}
                             svgCode={state.svgCode}
                             dimensions={state.dimensions}
+                            transformTab={state.transformTab}
+                            transformSVGCode={state.transformSVGCode}
                             handleChangeBg={handleChangeBg}
                             handleDownloadSVG={handleDownloadSVG}
+                            handleChangeTransformTab={handleChangeTransformTab}
                         />
                     </div>
                 </ResizablePanel>
