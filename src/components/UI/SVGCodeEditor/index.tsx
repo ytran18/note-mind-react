@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, Fragment } from "react";
 import { Editor as MonacoEditor } from "@monaco-editor/react";
 import { Tag, Button, Popover, InputNumber } from "antd";
 
@@ -69,7 +69,7 @@ const SVGCodeEditor = (props: SVGCodeEditorProps) => {
                 <div className="flex items-center">
                     {editorTop.map((item) => {
                         return (
-                            <>
+                            <Fragment key={item.key}>
                                 {item.key === 'svg-dimensions' ? (
                                     <Popover
                                         placement="bottomLeft"
@@ -96,7 +96,6 @@ const SVGCodeEditor = (props: SVGCodeEditorProps) => {
                                         }
                                     >
                                         <div
-                                            key={item.key}
                                             className="h-8 w-fit min-w-8 flex items-center justify-center cursor-pointer hover:bg-[#f1f2f4] rounded transition-colors duration-200 px-1"
                                         >
                                             {item.icon}
@@ -107,14 +106,13 @@ const SVGCodeEditor = (props: SVGCodeEditorProps) => {
                                     </Popover>
                                 ) : (
                                     <div
-                                        key={item.key}
                                         className="w-8 h-8 flex items-center justify-center cursor-pointer hover:bg-[#f1f2f4] rounded transition-colors duration-200"
                                         onClick={item.func}
                                     >
                                         {item.icon}
                                     </div>
                                 )}
-                            </>
+                            </Fragment>
                         )
                     })}
                 </div>
