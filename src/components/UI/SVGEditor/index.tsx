@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { message } from "antd";
-import { transform } from '@svgr/core'
+import html2canvas from "html2canvas";
 
 import { doc, collection, updateDoc } from 'firebase/firestore';
 import { fireStore } from "@core/firebase/firebase";
@@ -22,6 +22,8 @@ interface SVGEditorState {
     isFirstTimeLoad: boolean;
     transformSVGCode: string;
     transformTab: string;
+    pngScale: string;
+    scale: number;
 };
 
 interface SVGCodeEditorProps {
@@ -44,6 +46,8 @@ const SVGEditor = (props: SVGCodeEditorProps) => {
         isFirstTimeLoad: true,
         transformSVGCode: '',
         transformTab: 'Preview',
+        pngScale: '1',
+        scale: 100,
     });
 
     useEffect(() => {
@@ -207,6 +211,33 @@ const SVGEditor = (props: SVGCodeEditorProps) => {
         };
     };
 
+    const handleDownloadPNG = async () => {
+        const element = document.getElementById('svg-png');
+        if (element) {
+            const canvas = await html2canvas(element);
+            const imgData = canvas.toDataURL('image/png');
+
+            const link = document.createElement('a');
+            link.href = imgData;
+            link.download = `${title}.png`;
+            link.click();
+        } else {
+            message.error('Something went wrong!')
+        }
+    };
+
+    const handleCopyDataURI = () => {
+        const { transformSVGCode } = state;
+        if (!transformSVGCode) return;
+        try {
+            navigator.clipboard.writeText(transformSVGCode);
+            message.success('Copied to clipboard')
+        } catch (error) {
+            console.log({error});
+            message.error('Failed to copy to clipboard!')
+        };
+    };
+
     const handleChangeTransformTab = async (tag: string, checked: boolean) => {
         if (!checked) return;
         const { svgCode } = state;
@@ -226,6 +257,26 @@ const SVGEditor = (props: SVGCodeEditorProps) => {
         } catch (error) {
             console.log({error});
         }
+    };
+    
+    const handleCopyTransformCode = () => {
+        const { transformSVGCode } = state;
+        if (!transformSVGCode) return;
+        try {
+            navigator.clipboard.writeText(transformSVGCode);
+            message.success('Copied to clipboard')
+        } catch (error) {
+            console.log({error});
+            message.error('Failed to copy to clipboard!')
+        };
+    };
+
+    const handleChangePngScale = (value: string) => {
+        setState(prev => ({...prev, pngScale: value}));
+    };
+
+    const handleScaleChange = (event: any) => {
+        setState(prev => ({...prev, scale: Math.round(event?.state?.scale * 100)}));
     };
 
     return (
@@ -257,9 +308,16 @@ const SVGEditor = (props: SVGCodeEditorProps) => {
                             dimensions={state.dimensions}
                             transformTab={state.transformTab}
                             transformSVGCode={state.transformSVGCode}
+                            pngScale={state.pngScale}
+                            scale={state.scale}
                             handleChangeBg={handleChangeBg}
                             handleDownloadSVG={handleDownloadSVG}
                             handleChangeTransformTab={handleChangeTransformTab}
+                            handleCopyTransformCode={handleCopyTransformCode}
+                            handleDownloadPNG={handleDownloadPNG}
+                            handleChangePngScale={handleChangePngScale}
+                            handleCopyDataURI={handleCopyDataURI}
+                            handleScaleChange={handleScaleChange}
                         />
                     </div>
                 </ResizablePanel>
