@@ -93,7 +93,6 @@ const MermaidEditor = (props: MermaidChartProps) => {
         let previewUrl: string = '';
         if (state.autoSync) {
             previewUrl = await handleGetUrlPreview(docId);
-            console.log("auto: ", previewUrl);
         };
 
         const docRef = doc(collection(fireStore, 'documents'), docId);
@@ -226,7 +225,6 @@ const MermaidEditor = (props: MermaidChartProps) => {
         async function uploadPreviewImg() {
             if (!state.autoSync && state.isSync) {
                 const previewUrl = await handleGetUrlPreview(docId);
-                console.log("sync: ", previewUrl);
                 
                 const docRef = doc(collection(fireStore, 'documents'), docId);
                 await updateDoc(docRef, {
