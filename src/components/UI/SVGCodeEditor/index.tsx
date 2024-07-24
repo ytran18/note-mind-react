@@ -1,6 +1,8 @@
 import { useState, Fragment } from "react";
 import { Editor as MonacoEditor } from "@monaco-editor/react";
-import { Tag, Button, Popover, InputNumber } from "antd";
+import { Tag, Button, Popover, InputNumber, Upload, message } from "antd";
+import type { UploadProps } from 'antd';
+import { RcFile } from 'antd/lib/upload/interface';
 
 import IconRotate from '@icons/iconRotate.svg';
 import IconFlipY from '@icons/iconFlipY.svg';
@@ -45,12 +47,13 @@ interface SVGCodeEditorProps {
     handleFlipX: () => void;
     handleCopySVG: () => void;
     handleDownloadSVG: () => void;
+    handleUploadSVG: (file: RcFile) => void;
 }
 
 const SVGCodeEditor = (props: SVGCodeEditorProps) => {
 
     const { svgCode, dimensions } = props;
-    const { handleChangeSVGCode, handleChangeDimensions, handleRotate, handleFlipY, handleFlipX, handleCopySVG, handleDownloadSVG } = props;
+    const { handleChangeSVGCode, handleChangeDimensions, handleRotate, handleFlipY, handleFlipX, handleCopySVG, handleDownloadSVG, handleUploadSVG } = props;
 
     const [state, setState] = useState<SVGCodeEditorState>({
         selectedTags: [],
@@ -62,6 +65,19 @@ const SVGCodeEditor = (props: SVGCodeEditorProps) => {
         { key: 'svg-flipx', icon: <IconFlipX />, func: () => handleFlipX() },
         { key: 'svg-dimensions', icon: <IconDimensions /> },
     ];
+
+    const propsUpload: UploadProps = {
+        name: 'file',
+        accept: '.svg',
+        action: 'https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload',
+        headers: {
+            authorization: 'authorization-text',
+        },
+        fileList: [],
+        onChange(info) {
+            handleUploadSVG(info.file.originFileObj as RcFile);
+        },
+      };
 
     return (
         <div className="w-full h-full flex flex-col">
@@ -141,12 +157,14 @@ const SVGCodeEditor = (props: SVGCodeEditorProps) => {
                 />
             </div>
             <div className="h-[64px] w-full flex items-center justify-between px-9 border-t border-[#e3e5e8]">
-                <Button
-                    icon={<IconUpload />}
-                    className="font-medium"
-                >
-                    Upload
-                </Button>
+                <Upload {...propsUpload}>
+                    <Button
+                        icon={<IconUpload />}
+                        className="font-medium"
+                    >
+                        Upload
+                    </Button>
+                </Upload>
                 <div className="flex items-center gap-2">
                     <Button
                         icon={<IconCopy />}

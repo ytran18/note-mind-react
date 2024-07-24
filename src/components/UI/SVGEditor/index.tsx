@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { message } from "antd";
+import { RcFile } from 'antd/lib/upload/interface';
 import html2canvas from "html2canvas";
 
 import { doc, collection, updateDoc } from 'firebase/firestore';
@@ -79,6 +80,21 @@ const SVGEditor = (props: SVGCodeEditorProps) => {
 
         return () => clearTimeout(searchTimeout);
     },[state.svgCode]);
+
+    const handleUploadSVG = (file: RcFile) => {
+        const reader = new FileReader();
+        reader.onload = function(e: ProgressEvent<FileReader>) {
+            const svgContent = e.target?.result;
+            if (typeof svgContent !== 'string') {
+                message.error('Something went wrong!');
+                return;
+            };
+
+            setState(prev => ({...prev, svgCode: svgContent, isFirstTimeLoad: false}));
+        };
+
+        reader.readAsText(file);
+    };
 
     const handleChangeDimensions = (value: string | null) => {
         setState(prev => ({...prev, dimensions: value}));
@@ -294,6 +310,7 @@ const SVGEditor = (props: SVGCodeEditorProps) => {
                             handleFlipX={handleFlipX}
                             handleCopySVG={handleCopySVG}
                             handleDownloadSVG={handleDownloadSVG}
+                            handleUploadSVG={handleUploadSVG}
                         />
                     </div>
                 </ResizablePanel>

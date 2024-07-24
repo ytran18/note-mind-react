@@ -1,4 +1,4 @@
-import { Tag, Flex, Button, Result } from "antd";
+import { Tag, Flex, Result } from "antd";
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
 
 import SVGReactTransform from "../SVGReactTransform";

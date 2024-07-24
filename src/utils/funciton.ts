@@ -180,39 +180,46 @@ export async function svgr(code: string, options = {}) {
     const json = await res.json();
     if (json.error) throw new Error(json.error);
     return json.output;
-}
+};
 
 export async function convertSvgToPng(svg: string): Promise<string> {
     return new Promise((resolve, reject) => {
-        const canvas = document.createElement("canvas");
-        const ctx = canvas.getContext("2d");
+        const div = document.createElement("div");
+        div.style.position = "absolute";
+        div.style.top = "-9999px";
+        div.style.left = "-9999px";
+        div.innerHTML = svg;
 
-        if (!ctx) {
-            reject("Canvas context not found");
+        document.body.appendChild(div);
+        const svgElement = div.querySelector("svg");
+        if (!svgElement) {
+            document.body.removeChild(div);
+            reject('SVG not rendered correctly');
             return;
         }
 
-        const img = new Image();
-        const svgBlob = new Blob([svg], {
-            type: "image/svg+xml;charset=utf-8",
-        });
-        const url = URL.createObjectURL(svgBlob);
+        const viewBox = svgElement.getAttribute("viewBox");
+        if (viewBox) {
+            const viewBoxValues = viewBox.split(" ");
+            if (viewBoxValues.length === 4) {
+                const width = parseFloat(viewBoxValues[2]);
+                const height = parseFloat(viewBoxValues[3]);
+                svgElement.setAttribute("width", width.toString());
+                svgElement.setAttribute("height", height.toString());
+            }
+        } else {
+            document.body.removeChild(div);
+            reject('SVG does not have viewBox attribute');
+            return;
+        }
 
-        img.onload = () => {
-            canvas.width = img.width;
-            canvas.height = img.height;
-            ctx.drawImage(img, 0, 0);
-            URL.revokeObjectURL(url);
-
-            const pngDataUri = canvas.toDataURL("image/png", 0.8);
+        html2canvas(div).then(canvas => {
+            const pngDataUri = canvas.toDataURL("image/png");
+            document.body.removeChild(div);
             resolve(pngDataUri);
-        };
-
-        img.onerror = (error) => {
-            URL.revokeObjectURL(url);
+        }).catch(error => {
+            document.body.removeChild(div);
             reject(error);
-        };
-
-        img.src = url;
+        });
     });
-}
+};
