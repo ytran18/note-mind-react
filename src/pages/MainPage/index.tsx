@@ -113,7 +113,7 @@ const MainPage = () => {
                             <IconLeft />
                             Back                
                         </div>
-                        <div className='w-full flex items-center justify-between'>
+                        <div className='w-full flex flex-col gap-2 sm:flex-row sm:items-center justify-between'>
                             <div className=''>
                                 <div className='text-xl font-semibold'>{`Hello, ${user?.name}`}</div>
                                 {state.cards.length === 0 && (
@@ -145,10 +145,10 @@ const MainPage = () => {
                             </div>
                         </div>
                         <div className='text-xs font-medium'>* Press Shift + Space to search your cards</div>
-                        <div className='grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-3 gap-4 place-items-center pb-5'>
+                        <div className='w-full grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-3 gap-4 place-items-center pb-5'>
                             {state.cards.map((item) => {
                                 return (
-                                    <div key={item._id}>
+                                    <div className='w-full' key={item._id}>
                                         <FileCard
                                             docId={item._id}
                                             title={item.title}

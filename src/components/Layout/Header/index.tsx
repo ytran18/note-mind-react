@@ -4,19 +4,17 @@ import useAuth from "@hooks/useAuth";
 import UserAvatar from "@components/UI/UserAvatar";
 
 const Header = () => {
-
     const navigate = useNavigate();
-    const user = useAuth().user;
-    const loading = useAuth().loading;
+    const { user, loading } = useAuth();
 
     return (
-        <header className="max-w-5xl w-[64rem] flex flex-col px-4 py-4 lg:px-16 mx-auto 2xl:max-w-7xl 2xl:w-[80rem]">
-            <div className="flex items-center justify-between bg-opacity-30 backdrop-blur-lg backdrop-filter">
-                <div className="font-semibold cursor-pointer">Note Mind</div>
+        <header className="w-full px-4 py-3 sm:py-4 md:px-6 lg:px-8">
+            <div className="max-w-7xl mx-auto flex items-center justify-between">
+                <div className="font-semibold text-lg sm:text-xl cursor-pointer" onClick={() => navigate('/')}>Note Mind</div>
                 {!loading && (
                     !user ? (
                         <Button
-                            className="!bg-black !text-white font-semibold text-sm"
+                            className="!bg-black !text-white font-semibold text-xs sm:text-sm"
                             onClick={() => navigate('/login')}
                         >
                             Sign in

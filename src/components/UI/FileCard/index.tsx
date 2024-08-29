@@ -128,7 +128,7 @@ const FileCard = (props: FileCardProps) => {
     ];
 
     return (
-        <div id={docId} className="file-card">
+        <div id={docId} className="file-card w-full">
             <Dropdown
                 menu={{items: contextMenu}}
                 trigger={['contextMenu']}
