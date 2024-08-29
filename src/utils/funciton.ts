@@ -49,7 +49,7 @@ export const handleUploadPDF = async (file: any): Promise<string | void> => {
     }
 };
 
-export const getUserDocuments = async (user: User) => {
+export const getUserDocuments = async (user: User, searchTerm: string = '') => {
     const userDocumentsRef = query(
         collection(fireStore, "documents"),
         where("owner", "==", user?._id)
@@ -59,7 +59,15 @@ export const getUserDocuments = async (user: User) => {
 
     await getDocs(userDocumentsRef).then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-            if (doc.data()) documents.push(doc.data());
+            const data = doc.data();
+            if (data) {
+                // Check if the document matches the search term
+                if (searchTerm === '' || 
+                    data.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    data.content?.toLowerCase().includes(searchTerm.toLowerCase())) {
+                    documents.push(data);
+                }
+            }
         });
     });
 

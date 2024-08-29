@@ -22,6 +22,7 @@ interface DashboardStateTypes {
     cards: Document[];
     filter: string;
     isOpenSearchModal: boolean;
+    searchResults: Document[];
 };
 
 const MainPage = () => {
@@ -34,6 +35,7 @@ const MainPage = () => {
         cards: [],
         filter: 'all',
         isOpenSearchModal: false,
+        searchResults: [],
     });
 
     const user = useAuth().user;
@@ -92,6 +94,11 @@ const MainPage = () => {
             filter: value,
             cards: documents,
         }));
+    };
+
+    const handleSearch = async (searchValue: string) => {
+        const searchResults = await getUserDocuments(user!, searchValue);
+        setState(prev => ({ ...prev, searchResults }));
     };
 
     return (
@@ -162,6 +169,9 @@ const MainPage = () => {
                         <SearchModal
                             open={state.isOpenSearchModal}
                             onCancelSearchModal={onCancelSearchModal}
+                            onSearch={handleSearch}
+                            searchResults={state.searchResults}
+                            handleNavigateEditor={handleNavigateEditor}
                         />
                     </div>
                 </div>

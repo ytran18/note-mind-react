@@ -1,4 +1,4 @@
-import { useState,  useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Modal } from "antd";
 import { Document } from "@utils/interface";
 
@@ -9,43 +9,48 @@ import IconEnter from '@icons/iconEnter.svg';
 
 import './style.scss';
 
-interface SearchModalState {
-    searchValue: string;
-    searchResult: Document[];
-}
-
 interface SearchModalProps {
     open: boolean;
     onCancelSearchModal: () => void;
+    onSearch: (searchValue: string) => void;
+    searchResults: Document[];
+    handleNavigateEditor: (cardId: string) => void;
 }
 
 const SearchModal = (props: SearchModalProps) => {
+    const { open, onCancelSearchModal, onSearch, searchResults, handleNavigateEditor } = props;
 
-    const { open } = props;
-    const { onCancelSearchModal } = props;
-
-    const [state, setState] = useState<SearchModalState>({
-        searchValue: '',
-        searchResult: [],
-    });
-
+    const [searchValue, setSearchValue] = useState('');
     const inputSearchRef = useRef<HTMLInputElement | null>(null);
 
     useEffect(() => {
-        if (inputSearchRef.current && open) {
-            inputSearchRef.current.focus();
+        if (open) {
+            setTimeout(() => {
+                inputSearchRef.current?.focus();
+            }, 0);
         }
-    },[open]);
+    }, [open]);
 
-    const handleNavigatePage = (card: Document) => {
+    useEffect(() => {
+        if (searchValue.length > 0) {
+            onSearch(searchValue);
+        }
+    }, [searchValue]);
 
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchValue(e.target.value);
+    };
+
+    const handleClose = () => {
+        onCancelSearchModal();
+        setSearchValue('');
     };
 
     return (
         <Modal
             open={open}
             closeIcon={false}
-            onCancel={() => {onCancelSearchModal(); setState(prev => ({...prev, searchValue: '', searchResult: []}))}}
+            onCancel={handleClose}
             className="!w-[755px]"
             style={{
                 height: 'auto',
@@ -59,38 +64,35 @@ const SearchModal = (props: SearchModalProps) => {
         >
             <div className="w-full h-full flex flex-col gap-4 bg-white rounded-lg" style={{maxHeight: 'max(70vh, 546px)'}}>
                 <div className="w-full flex items-center justify-between p-3 border-b border-[rgb(237,237,236)]">
-                    {state.searchValue.length > 0 ? <IconDocument /> : <IconSearch />}
+                    {searchValue.length > 0 ? <IconDocument /> : <IconSearch />}
                     <input 
                         type="text"
                         ref={inputSearchRef}
-                        value={state.searchValue}
-                        onChange={(e) => setState(prev => ({...prev, searchValue: e.target.value}))}
+                        value={searchValue}
+                        onChange={handleInputChange}
                         className="outline-none w-full mx-4 placeholder:opacity-70"
                         placeholder="Search your cards"
                     />
                     <IconFilter />
                 </div>
                 <div className="w-full overflow-y-auto scrollbar-hide" style={{height: 'calc(100% - 87px)'}}>
-                    {state.searchResult.map((item, index) => {
-                        return (
-                            <div
-                                className="w-full flex items-center justify-between cursor-pointer transition-colors duration-200 rounded-lg hover:bg-[rgb(241,240,240)] visible-icon h-10 px-4 py-1"
-                                key={`search-result-${index}`}
-                                onClick={() => {
-                                    handleNavigatePage(item);
-                                    setState(prev => ({...prev, isShowModalSearch: false, searchValue: '', searchResult: []}))}
-                                }
-                            >
-                                <div className="flex items-center gap-3">
-                                    {/* <div className="">{item.icon}</div> */}
-                                    <div className="font-medium">{item.title}</div>
-                                </div>
-                                <div className="hidden icon-enter">
-                                    <IconEnter />
-                                </div>
+                    {searchResults.map((item, index) => (
+                        <div
+                            className="w-full flex items-center justify-between cursor-pointer transition-colors duration-200 rounded-lg hover:bg-[rgb(241,240,240)] visible-icon h-10 px-4 py-1"
+                            key={`search-result-${index}`}
+                            onClick={() => {
+                                handleNavigateEditor(item._id);
+                                handleClose();
+                            }}
+                        >
+                            <div className="flex items-center gap-3">
+                                <div className="font-medium">{item.title}</div>
                             </div>
-                        )
-                    })}
+                            <div className="hidden icon-enter">
+                                <IconEnter />
+                            </div>
+                        </div>
+                    ))}
                 </div>
             </div>
         </Modal>
