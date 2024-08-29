@@ -31,6 +31,7 @@ const MonacoEditor = (props: MonacoEditorProps) => {
                 quickSuggestions: true,
                 scrollBeyondLastLine: false,
                 value: code || '',
+                wordWrap: "on" as "on",
             });
 
             editorRef.current.onDidChangeModelContent(({ isFlush }) => {
