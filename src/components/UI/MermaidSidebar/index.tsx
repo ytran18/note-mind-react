@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 import { Popover } from 'antd';
 
@@ -46,8 +46,19 @@ const MermaidSidebar = (props: MermaidSidebarProps) => {
         isCollapase: false,
         tabActive: null,
     });
-    
+
+    const sidebarRef = useRef<HTMLDivElement>(null);
     const iw = useWindowSize().width;
+
+    useEffect(() => {
+        if (sidebarRef.current) {
+            sidebarRef.current.style.width = state.isCollapase ? '53px' : '200px';
+        }
+    }, [state.isCollapase]);
+
+    const handleToggleSidebar = () => {
+        setState(prev => ({...prev, isCollapase: !prev.isCollapase}));
+    };
 
     useEffect(() => {
         setState(prev => ({...prev, isCollapase: iw < 900 ? true : false}));
@@ -109,11 +120,25 @@ const MermaidSidebar = (props: MermaidSidebarProps) => {
     };
 
     return (
-        <div className="mermaid-sidebar h-full w-fit flex flex-col border border-[rgb(229,230,230)] rounded-tl-md rounded-bl-md p-2 gap-2 bg-[rgba(229,237,255,0.3)]">
-            {menu.map((item, index) => {
+        <div
+            className="mermaid-sidebar h-full w-fit flex flex-col border border-[rgb(229,230,230)] rounded-tl-md rounded-bl-md p-2 gap-2 bg-[rgba(229,237,255,0.3)] transition-all duration-300 ease-in-out overflow-hidden"
+            ref={sidebarRef}
+        >
+            <div 
+                className="w-full flex flex-nowrap whitespace-nowrap p-2 gap-2 items-center cursor-pointer text-[#00237a] font-medium hover:bg-[rgb(204,218,255)] rounded-md transition-colors duration-200"
+                onClick={handleToggleSidebar}
+            >
+                <div className='flex h-5 w-5 gap-2 align-middle'>
+                    {state.isCollapase ? <IconExpand /> : <IconCollapse />}
+                </div>
+                {!state.isCollapase && (
+                    <div className='text-sm'>Collapse menu</div>
+                )}
+            </div>
+            {menu.slice(1).map((item, index) => {
                 return (
                     <div key={item.key}>
-                        {(item.key === 'collapse-menu' || item.key === 'help') ? (
+                        {item.key === 'help' ? (
                             <div
                                 className={`w-full flex flex-nowrap whitespace-nowrap p-2 gap-2 items-center cursor-pointer text-[#00237a] font-medium hover:bg-[rgb(204,218,255)] rounded-md transition-colors duration-200 ${(state.tabActive === index && index !== 0) ? 'bg-[rgb(47,66,235)] text-white' : ''}`}
                                 onClick={() => handleMenuClick(item.key, index)}

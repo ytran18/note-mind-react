@@ -19,3 +19,13 @@
         padding: 8px !important;
     }
 }
+
+.mermaid-sidebar {
+    transition: width 300ms ease-in-out;
+    width: 200px;
+}
+
+// Add any additional styles you need for the collapsed state
+.mermaid-sidebar.collapsed {
+    width: 53px;
+}
