@@ -46,7 +46,7 @@ const PdfEditor = (props: PdfEditorProps) => {
                     </div>
                 </ResizablePanel>
                 <div className='group flex w-2 cursor-col-resize items-center justify-center rounded-md bg-gray-50'>
-                    <ResizableHandle className='h-1 w-24 rounded-full bg-neutral-400 duration-300 group-hover:bg-primaryb group-active:duration-75 lg:h-24 lg:w-1' />
+                    <ResizableHandle className='rounded-full bg-neutral-400 duration-300 group-hover:bg-primary group-active:duration-75 h-24 w-1' />
                 </div>
                 <ResizablePanel defaultSize={50} minSize={30}>
                     <div className='h-full min-w-[25vw] flex-1'>
