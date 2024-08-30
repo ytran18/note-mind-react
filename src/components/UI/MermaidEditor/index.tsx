@@ -265,7 +265,7 @@ const MermaidEditor = (props: MermaidChartProps) => {
                         </div>
                     </ResizablePanel>
                     <div className='group hidden me:flex w-2 cursor-col-resize items-center justify-center rounded-md bg-gray-50'>
-                        <ResizableHandle className='h-1 w-24 rounded-full bg-neutral-400 duration-300 group-hover:bg-primaryb group-active:duration-75 lg:h-24 lg:w-1' />
+                        <ResizableHandle className='rounded-full bg-neutral-400 duration-300 group-hover:bg-primary group-active:duration-75 h-24 w-1' />
                     </div>
                     <ResizablePanel defaultSize={50} minSize={25}>
                         <div className="flex h-full justify-center items-center border rounded-md border-[rgb(229,230,230)]">
