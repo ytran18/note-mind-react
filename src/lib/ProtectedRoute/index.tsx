@@ -1,21 +1,24 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
+import useAuth from "@hooks/useAuth";
+import LoadingPage from "@components/Layout/LoadingPage";
 
 interface ProtectedRouteProps {
     children: React.ReactNode;
 };
 
-const ProtectedRoute = (props: ProtectedRouteProps) => {
+const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
+    const { user, loading } = useAuth();
 
-    const { children } = props;
+    if (loading) {
+        return <LoadingPage />;
+    }
 
-    const token = localStorage.getItem('user-login');
+    if (!user) {
+        return <Navigate to="/login" replace />;
+    }
 
-    if (!token) {
-        return <Navigate to={'/login'} replace />;
-      }
-    
-      return children;
+    return <>{children}</>;
 };
 
 export default ProtectedRoute;
